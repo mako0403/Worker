@@ -46,6 +46,7 @@ const globalStore = useGlobalStore();
 import { useRouter, RouterLink } from 'vue-router'
 const router = useRouter()
 import ChatMessagesTemplate from "@/components/common/ChatMessages.vue";
+import { useHead } from '@vueuse/head'
 
 import user_avatar from '@@/images/avatar.jpg';
 import ai_avatar from '@@/images/logo1.webp';
@@ -53,6 +54,13 @@ import ai_avatar from '@@/images/logo1.webp';
 // 用户和AI头像路径
 const userAvatar = globalStore.memberInfo.avatar?globalStore.memberInfo.avatar:user_avatar;
 const aiAvatar = ai_avatar;
+
+useHead({
+  meta: [
+    { name: 'description', content: '妈妈智问，AI互动问答平台，为孕产妇提供专业、便捷的健康资讯解答。' },
+    { property: 'og:image', content: 'https://worker.e-eps.com/images/logo1.png' }, // 动态OG图片
+  ]
+})
 
 
 // 滚动到底部
@@ -156,7 +164,7 @@ const sendMessage = async () => {
             - 温柔但不啰嗦，科学但不生硬。例如：“根据科学研究……”比“我认为……”更具权威性。
             - 如果用户提出的问题显得很焦虑，可以在回答前加一句：“我理解您现在的担忧，我们一起来看看怎么解决。”
             
-            用户信息：
+            用户信息(如果不存在用户信息则不用提供个性化解析)：
             ${memberBackgroundInfo.value}
 
             输出内容格式：
@@ -239,12 +247,15 @@ watch(()=>finished.value, async (nval, oval)=>{
         const lastUserMessage = messages.filter(message => message.role === 'user').pop();
         const lastAIResponse = messages.filter(message => message.role === 'assistant').pop();
 
-        if(lastUserMessage){
-            await axios.post('/member/record_chat', {card_number:globalStore.memberInfo.card_number, role:'user', content:lastUserMessage.content}, {toast:0})
+        if(globalStore.memberInfo.card_number){
+            if(lastUserMessage){
+                await axios.post('/member/record_chat', {card_number:globalStore.memberInfo.card_number, role:'user', content:lastUserMessage.content}, {toast:0})
+            }
+            if(lastAIResponse){
+                await axios.post('/member/record_chat', {card_number:globalStore.memberInfo.card_number, role:'assistant', content:lastAIResponse.content}, {toast:0})
+            }
         }
-        if(lastAIResponse){
-            await axios.post('/member/record_chat', {card_number:globalStore.memberInfo.card_number, role:'assistant', content:lastAIResponse.content}, {toast:0})
-        }
+
 
         // 在输出完成后，确保输入框获取焦点
         nextTick(() => {
@@ -258,8 +269,15 @@ watch(()=>finished.value, async (nval, oval)=>{
 
 onMounted(async()=>{
     try {
-        const { data } = await axios.get('/member/background_info', {card_number:globalStore.memberInfo.card_number}, {totast:0})
-        memberBackgroundInfo.value = data
+
+        await axios.get('/index/config', {totast:0})
+
+        if(globalStore.memberInfo.card_number){
+            const { data } = await axios.get('/member/background_info', {card_number:globalStore.memberInfo.card_number}, {totast:0})
+            memberBackgroundInfo.value = data
+        }
+        
+
     } catch (error) {
 
     }

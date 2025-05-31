@@ -81,7 +81,6 @@ service.interceptors.response.use((response: AxiosResponse) => {
         console.log('响应拦截：', data);
     }
 
-    
     globalStore.updateLoginStatus(data.session.isLogged || 0)
     globalStore.setGlobalConfig(data.session.globalConfig || {})
     globalStore.setBranchConfig(data.session.branchConfig || {})
@@ -109,6 +108,13 @@ service.interceptors.response.use((response: AxiosResponse) => {
 }, (error) => {
     //const { response, config } = error; // 解构
     const { response, config } = error as { response: any, config: ExtendedAxiosRequestConfig };
+
+    if (error.code === 'ERR_CANCELED') {
+        console.log('Request canceled:', error.message);
+        axiosCancel.removePending(config); // 仍然需要从 pending 列表中移除
+        axiosLoading.closeLoading(); // 如果被取消的请求触发了 loading，也要关闭
+        return Promise.reject(error); // 拒绝 Promise，以便调用方可以捕获并处理取消
+    }
 
     if (!window.navigator.onLine) {
         ElNotification({
@@ -170,6 +176,13 @@ const request = {
                     resolve(res as unknown as Promise<T>);
                 })
                 .catch((e: Error | AxiosError) => {
+                    // 同样在这里处理取消错误，避免重复的通知
+                    if ((e as AxiosError).code === 'ERR_CANCELED') {
+                        console.log('Request explicitly canceled at request wrapper level.');
+                        // 不需要 reject，因为拦截器已经处理了，或者如果拦截器没处理，这里会抛出
+                        // 如果拦截器已处理且 return Promise.reject，这里会捕获到
+                        return; // 如果已在拦截器中处理，这里可以直接返回，阻止进一步的错误传递
+                    }
                     reject(e);
                 })
         });

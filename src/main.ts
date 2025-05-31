@@ -33,14 +33,19 @@ import zhCn from 'element-plus/es/locale/lang/zh-cn'
 
 import App from './App.vue'
 import router from './router'
+import { createHead } from '@vueuse/head' // 导入 createHead
+
+
 
 const app = createApp(App)
+const head = createHead() // 创建 head 实例
 
 app.use(createPinia());
 app.use(router);
 app.use(ElementPlus, {
     locale: zhCn,
 });
+app.use(head) // 使用 head 插件
 
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)

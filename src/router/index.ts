@@ -184,7 +184,7 @@ const routers: Array<RouteRecordRaw> = [
                 path: '/member/aichat',
                 name: 'member_ai_chat',
                 component: () => import('../views/member/central/AiChat.vue'),
-                meta: { ...metaData, title: '妈妈智问', showHeader: true, showTabbar: false },
+                meta: { ...metaData, title: '妈妈智问 & 一凡妈妈智慧产康', requiresAuth: false, showHeader: true, showTabbar: false },
             },
             {
                 path: '/member/wxpay/:no',
@@ -236,9 +236,9 @@ const routers: Array<RouteRecordRaw> = [
             },
             // 孕产妇健康管理手册
             {
-                path: '/explore/pregnancy/index',
+                path: '/explore/book/pregnant',
                 name: 'pregnancy_index',
-                component: () => import('../views/explore/Pregnancy/Index.vue'),
+                component: () => import('../views/explore/Book/Pregnant.vue'),
                 meta: { title: '孕产妇健康管理手册' }
             },
         ]
@@ -288,6 +288,20 @@ router.beforeEach(async (to, from, next) => {
     if (branchConfig.name) {
         document.title = to.meta.title + ' - ' + branchConfig.name
     }
+
+    if(to.meta.description) {
+        // 更新 Meta 描述
+        let metaDescriptionTag = document.querySelector('meta[name="description"]');
+        if (!metaDescriptionTag) {
+            // 如果不存在，则创建并添加到头部
+            metaDescriptionTag = document.createElement('meta');
+            metaDescriptionTag.setAttribute('name', 'description');
+            document.head.appendChild(metaDescriptionTag);
+        }
+        // 设置或更新描述内容
+        metaDescriptionTag.setAttribute('content', to.meta.description || ''); // 提供一个默认值
+    }
+
 
     const token = Cookies.get('ERPAuth');
     to.meta.replaceBack ? setReplace(to.fullPath) : '';
