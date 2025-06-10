@@ -239,7 +239,7 @@ const routers: Array<RouteRecordRaw> = [
                 path: '/explore/book/pregnant',
                 name: 'pregnancy_index',
                 component: () => import('../views/explore/Book/Pregnant.vue'),
-                meta: { title: '孕产妇健康管理手册' }
+                meta: { title: '孕产妇健康管理' }
             },
         ]
     },

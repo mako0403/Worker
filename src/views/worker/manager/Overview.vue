@@ -333,8 +333,8 @@ const minDate = new Date('2024', '05', '1');
 const maxDate = moment().add(1, 'month').add(1, 'day').toDate();
 const setCurrentDate = async (value) => {
     currentDate.value = value.selectedValues;
-    await getAnalysisData();
     showCurrentDate.value = false;
+    await getAnalysisData();
 }
 
 
@@ -361,6 +361,23 @@ const branchNomemberPie = ref([]);
 
 const getAnalysisData = async () => {
     try {
+        analysisData.value = {
+            data: [],
+            total_performance_task:0,
+            total_sale_price:0,
+            total_received:0,
+            total_sale_received:0,
+            total_sale_non_received:0,
+            total_sale_debt:0,
+            total_still_debt:0,
+            total_gift_price:0,
+            total_all_purchase_member_count:0,
+            total_purchase_new_member_count:0,
+            total_purchase_repeat_member_count:0,
+            total_branch_member_count:0,
+            performance_completion_rate:0,
+        };
+
         axiosLoading.addLoading();
         const res = await axios.get('/company/branch_lists',{},{toast:0})
         const branchLists = res.data;
