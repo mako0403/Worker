@@ -147,9 +147,9 @@
                                             </div>
                                         </div>
                                         <el-form-item class="mb-3">
-                                            <div class="w-full flex justify-content-between">
+                                            <div class="w-full flex justify-content-between" :class="{ 'text-gray-400': choseServices.job_title_bonus_once!='' }">
                                                 <div class="">是否赠送项目</div>
-                                                <el-switch v-model="form.is_gift" active-value="1" inactive-value="0"
+                                                <el-switch v-model="form.is_gift" active-value="1" inactive-value="0" :disabled="choseServices.job_title_bonus_once?true:false"
                                                     inline-prompt active-text="是，本次项目免费赠送" inactive-text="否" />
                                             </div>
                                         </el-form-item>
@@ -580,6 +580,7 @@ const nextStep = () => {
                 ElMessage({ message: '请选择要收费的项目', type: 'info' })
                 return;
             }
+            form.value.is_gift = 0;
             step.value = 2;
             break;
         case 2:
@@ -616,6 +617,11 @@ const nextStep = () => {
             }
             if (form.value.is_gift == 0 && form.value.price <= 0) {
                 ElMessage({ message: '请填写正确的收费金额', type: 'error' })
+                return;
+            }
+
+            if((form.value.is_gift==1 || form.value.paydetails.some(item => item.paymethod === "优惠免除")) && form.value.remark==''){
+                ElMessage({ message: '含优惠项，请填写备注', type: 'error' })
                 return;
             }
 

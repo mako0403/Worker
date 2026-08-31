@@ -108,8 +108,8 @@
 
 <script setup lang="ts">
 import { ref, toRefs, onMounted } from 'vue'
-
-import { useGlobal } from '@/components/Global';
+import { logout } from '@/utils/axios';
+import { useGlobal } from '@/utils/Global';
 const { axios, store, router, route, isLoadedPage, ElMessage } = useGlobal();
 const { workerConfig, isLogged } = toRefs(store);
 import Cookies from "js-cookie";
@@ -137,10 +137,7 @@ const getRemindLists = async () => {
 }
 
 const loginOut = async () => {
-    localStorage.removeItem('ERPAuth');
-    Cookies.remove('ERPAuth');
-    store.updateLoginStatus(0)
-    router.replace({ path: '/login' })
+    logout();
 }
 
 const showChangePassword = ref(false);

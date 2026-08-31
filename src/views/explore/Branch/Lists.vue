@@ -59,7 +59,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref, reactive, inject, watch, readonly } from "vue";
-import { useGlobal } from '@/components/Global';
+import { useGlobal } from '@/utils/Global';
 const { axios, store, router, route, isLoadedPage } = useGlobal();
 
 import { List as vanList } from 'vant';

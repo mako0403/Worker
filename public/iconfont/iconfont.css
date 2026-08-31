@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 4601934 */
-  src: url('iconfont.woff2?t=1745653741012') format('woff2'),
-       url('iconfont.woff?t=1745653741012') format('woff'),
-       url('iconfont.ttf?t=1745653741012') format('truetype');
+  src: url('iconfont.woff2?t=1754038304752') format('woff2'),
+       url('iconfont.woff?t=1754038304752') format('woff'),
+       url('iconfont.ttf?t=1754038304752') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,26 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-yuer:before {
+  content: "\e60a";
+}
+
+.icon-ruxian-:before {
+  content: "\e64d";
+}
+
+.icon-buru:before {
+  content: "\e668";
+}
+
+.icon-rufanghuli:before {
+  content: "\e64f";
+}
+
+.icon-yuersao:before {
+  content: "\e651";
 }
 
 .icon-Yoga:before {

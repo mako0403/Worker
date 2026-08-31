@@ -15,17 +15,17 @@
         <div v-if="videoLists.length" class="p-0">
             <van-list v-model:loading="loading" :finished="finished" offset="50" finished-text="没有更多了" @load="getLists"
                 class="p-3 mt-2 bg-white border-round-lg">
-                <div v-for="(item, index) in videoLists" :key="index" class="mb-3" @click="play(item.url)">
+                <div v-for="(item, index) in videoLists" :key="index" class="mb-3" @click="play(item)">
                     <div class="flex justify-content-between align-items-top gap-3 bg-white border-round-lg">
                         <div>
-                            <img :src="item.cover" width="120px" height="68px" class="border-round-lg" />
+                            <img :src="item.cover" width="100px" height="68px" class="border-round-lg" />
                         </div>
                         <div class="flex-1 overflow-hidden">
                             <div class="text-sm text-dblue-900 font-bold ellipsis ellipsis-line-1">
                                 {{ item.title }}
                             </div>
-                            <div class="text-xs text-dblue-300 mt-1">
-                                <div class="ellipsis ellipsis-line-1" v-html="item.description"></div>
+                            <div class="text-xs text-dblue-300 mt-2">
+                                <div class="ellipsis ellipsis-line-2" v-html="item.description.replace(/<[^>]+>/g, '')"></div>
                             </div>
                         </div>
                         <div class="flex align-items-center">
@@ -40,10 +40,16 @@
         </div>
         <div v-else class="text-center py-5 text-gray-500">暂无视频内容</div>
 
-        <van-popup v-model:show="playVideo" position="top" :style="{ height: playerHeight+'px', padding: '0px' }">
+        <van-popup v-model:show="playVideo" position="bottom" :style="{ padding: '0px' }">
             <div>
                 <video ref="videoPlayer" class="plyr" playsinline controls
                     :style="{ height: playerHeight + 'px' }"></video>
+                <div class="p-3 bg-white">
+                    <div class="overflow-hidden mb-3">
+                        <div class="text-lg font-bold">{{ playItem.title }}</div>
+                        <div v-html="playItem.description" class=""></div>
+                    </div>
+                </div>
             </div>
         </van-popup>
     </div>
@@ -63,6 +69,7 @@ const videoPlayer = ref<HTMLVideoElement | null>(null);
 const player = ref<Plyr | null>(null);
 const playVideo = ref(false);
 const playUrl = ref('');
+const playItem = ref([]);
 const pageWidth = ref(window.innerWidth);
 const playerHeight = ref(pageWidth.value * 0.5625);
 
@@ -98,8 +105,9 @@ const onSearch = () => {
 };
 
 // 播放视频
-const play = async (url: string) => {
-    playUrl.value = url;
+const play = async (item: Array) => {
+    playItem.value = item;
+    playUrl.value = item.url;
     playVideo.value = true;
 
     // 等待 DOM 渲染

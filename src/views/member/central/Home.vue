@@ -1,349 +1,310 @@
 <template>
-    <div class="h-full pb-6">
-        <div class="p-3">
-            <div class="flex align-items-center gap-3">
-                <div>
-                    <img :src="globalStore.memberInfo.avatar" class="border-circle" width="90px" height="90px">
+    <div class="member-home">
+
+        <!-- 顶部英雄区 -->
+        <div class="hero-section">
+            <div class="hero-blob-1" /><div class="hero-blob-2" />
+            <div class="hero-content">
+
+                <!-- 用户信息行 -->
+                <div class="flex align-items-center gap-3 mb-4">
+                    <div class="avatar-wrap">
+                        <img
+                            :src="avatarUrl || defaultAvatar"
+                            class="member-avatar"
+                            @error="onAvatarError"
+                        />
+                        <div class="avatar-dot" />
+                    </div>
+                    <div class="flex flex-column gap-1 flex-1 min-w-0">
+                        <div class="text-white font-bold" style="font-size:18px;">
+                            {{ globalStore.memberInfo.nickname || globalStore.memberInfo.fullname || '康复者' }}
+                        </div>
+                        <div class="flex align-items-center gap-2">
+                            <span class="member-tag">普通会员</span>
+                        </div>
+                    </div>
+                    <CheckIn @check-in-success="onCheckInSuccess" />
                 </div>
-                <div class="flex-grow-1">
-                    <div class="text-2xl font-semibold">{{ globalStore.memberInfo.nickname }}</div>
-                    <!-- <div class="text-xs text-gray-600 mt-2">{{ globalStore.branchConfig.name }}</div> -->
-                    <div class="flex align-items-center text-sm text-gray-600 mt-2 gap-1">
-                        <div class="bg-purple-600 px-3 py-1 text-xs text-white border-round-xl tags">普通会员</div>
-                        <div class="bg-green-600 px-3 py-1 text-xs text-white border-round-xl tags">DA.100</div>
+
+                <!-- 统计数据行 -->
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <div class="stat-num">{{ circleData.post_count }}</div>
+                        <div class="stat-label">发帖</div>
+                    </div>
+                    <div class="stat-div" />
+                    <div class="stat-item">
+                        <div class="stat-num">{{ circleData.like_received }}</div>
+                        <div class="stat-label">获赞</div>
+                    </div>
+                    <div class="stat-div" />
+                    <div class="stat-item">
+                        <div class="stat-num">{{ circleData.comment_count }}</div>
+                        <div class="stat-label">评论</div>
+                    </div>
+                    <div class="stat-div" />
+                    <div class="stat-item">
+                        <div class="stat-num">{{ Math.abs((globalStore.memberInfo as any).point || 0) }}</div>
+                        <div class="stat-label">积分</div>
                     </div>
                 </div>
-                <div>
-                    
-                    <!-- <el-icon size="20" class="text-600">
-                        <ArrowRight />
-                    </el-icon> -->
-                </div>
+
             </div>
         </div>
-        <div class="p-3">
-            <div class="flex justify-content-between text-center">
-                <div class="flex-1">
-                    <div class="text-xl font-semibold fadeinup animation-duration-300">{{ 0 }}</div>
-                    <div class="text-xs text-gray-500 mt-1 fadein animation-duration-300">圈子</div>
-                </div>
-                <div class="flex-1">
-                    <div class="text-xl font-semibold fadeinup animation-duration-300 animation-delay-100">{{ 0 }}</div>
-                    <div class="text-xs text-gray-500 mt-1 fadein animation-duration-300 animation-delay-100">粉丝</div>
-                </div>
-                <!-- <div class="flex-1">
-                    <div class="text-xl font-semibold fadeinup animation-duration-300 animation-delay-150">{{ 0 }}</div>
-                    <div class="text-xs text-gray-500 mt-1 fadein animation-duration-300 animation-delay-150">话题</div>
-                </div> -->
-                <div class="flex-1">
-                    <div class="text-xl font-semibold fadeinup animation-duration-300 animation-delay-200">{{ Math.abs(globalStore.memberInfo.point) }}</div>
-                    <div class="text-xs text-gray-500 mt-1 fadein animation-duration-300 animation-delay-200">积分</div>
-                </div>
-                <div class="flex-1">
-                    
-                    <div class="text-xs text-gray-500 fadein animation-duration-300 animation-delay-200"><CheckIn @checkInSuccess="onCheckInSuccess" /></div>
-                </div>
+
+        <!-- 主体 -->
+        <div class="home-body">
+
+            <!-- 快捷入口 -->
+            <div class="quick-grid">
+                <RouterLink to="/member/circle" class="quick-item no-underline" style="background:#f0e8ff;">
+                    <van-icon name="fire-o" size="22" color="#7c5cbf" />
+                    <span class="quick-label" style="color:#7c5cbf;">圈子</span>
+                </RouterLink>
+                <RouterLink to="/member/circle/experts" class="quick-item no-underline" style="background:#fff3e0;">
+                    <van-icon name="manager-o" size="22" color="#f97316" />
+                    <span class="quick-label" style="color:#f97316;">专家咨询</span>
+                </RouterLink>
+                <RouterLink to="/member/aichat" class="quick-item no-underline" style="background:#eff6ff;">
+                    <van-icon name="chat-o" size="22" color="#3b82f6" />
+                    <span class="quick-label" style="color:#3b82f6;">妈妈智问</span>
+                </RouterLink>
+                <RouterLink to="/member/workout/plan" class="quick-item no-underline" style="background:#e6f9f3;">
+                    <van-icon name="medal-o" size="22" color="#10b981" />
+                    <span class="quick-label" style="color:#10b981;">运动康复</span>
+                </RouterLink>
             </div>
-        </div>
-        <!-- <div class="p-3">
-            <div class="block-bg border-round-lg p-1">
-                <div class="p-2 flex justify-content-between align-items-center">
-                    <div class="text-md text-white ">已连续打卡{{ checkin }}天</div>
-                    <div class="text-xs text-purple-50 bg-orange-300 border-1 border-orange-400 px-3 border-round-xl"
-                        style="padding-top:1px; padding-bottom:2px;">立即打卡</div>
+
+            <!-- 我的服务 -->
+            <div class="section-card">
+                <div class="section-hd">
+                    <div class="section-dot" style="background:#f97316;" />
+                    <span class="section-title">我的服务</span>
+                    <span class="section-sub ml-2">{{ servicesLists?.length ?? 0 }} 项</span>
                 </div>
-                <div
-                    class="flex justify-content-between align-items-center gap-2 bg-white border-round-lg pt-3 pb-2 px-3 text-center">
-                    <div v-for="(item, index) in checkinSet" :key="index"
-                        class="flex-1 qd-bg border-1 border-round-sm text-white px-2 pb-2 pt-4 relative fadeinup animation-duration-500"
-                        :class="{ 'bg-orange-400 border-orange-300': checkin > index, 'bg-dblue-100 border-dblue-50': checkin < (index + 1) }"
-                        :style="item ? { 'animation-delay': (index * 100) + 'ms !important' } : {}">
-                        <svg class="icon absolute bg-white border-circle" aria-hidden="true"
-                            style="width:24px; height:24px; left:52%;  top:0px; transform:translate(-50%,-40%);"
-                            :class="{ 'opacity-60': checkin < (index + 1) }">
-                            <use xlink:href="#color-jifen2"></use>
-                        </svg>
-                        <div class="font-bold" style="transform: scale(1, 1.3);">{{ item }}</div>
-                        <div class="text-xs mt-1 opacity-50">第{{ index+1 }}天</div>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-        <div class="px-3 mt-3" v-if="pendingList">
-            <div v-for="(item, index) in pendingList" :key="index" class="flex justify-content-between align-items-center p-3 border-round-lg bg-red-50 border-1 border-red-100 mb-3">
-                <div>
-                    <div class="text-sm font-bold text-red-600">{{ item.title }}<span class="ml-3">￥{{ item.total_fee }}</span></div>
-                    <div class="text-xs mt-1 text-red-200">您有一笔待付款，请尽快完成支付！</div>
-                </div>
-                <div class="text-xs">
-                    <RouterLink :to="'/member/wxpay/'+item.bill_no">
-                        <el-button round plain type="danger" size="small">微信支付</el-button>
-                    </RouterLink>
-                </div>
-            </div>
-        </div>
-        <div class="px-3 mt-3">
-            <div class="block-bg border-round-lg overflow-hidden relative">
-                <div class="pt-3 pb-2 px-3 flex align-items-center">
-                    <div class=" text-md text-white font-bold absolute" style="z-index: 2; top: 15px;">我的服务 {{ servicesLists?servicesLists.length:0 }} 项</div>
-                </div>
-                <div class="mt-3" v-if="servicesLists">
-                    <van-swipe class="my-swipe" :autoplay="3000" indicator-color="#eec137"
-                        style="overflow: unset !important;">
-                        <van-swipe-item v-for="(item, index) in servicesLists" :key="index">
-                            <div
-                                class="flex justify-content-between align-items-center gap-3 bg-white border-round-lg p-3 m-1">
-                                <div>
-                                    <img :src="item.model_cover" width="58px" height="58px">
-                                </div>
-                                <div class="flex-1">
-                                    <div class="text-dblue-900 font-bold ellipsis ellipsis-line-1">{{ item.model_name }}</div>
-                                    <div v-if="item.worker_info" class="text-xs text-500"> 
-                                        {{ item.last_usage_time ? '最后预约 '+item.last_usage_time:'尚未使用, 您可提前1日进行预约' }}
+
+                <template v-if="servicesLists && servicesLists.length > 0">
+                    <van-swipe :autoplay="4000" indicator-color="#7c5cbf">
+                        <van-swipe-item v-for="(item, idx) in servicesLists" :key="idx">
+                            <RouterLink
+                                :to="{ path: '/member/medical/appointment', query: { model_id: item.model_id, services_worker_id: item.services_worker_id }}"
+                                class="service-card no-underline"
+                            >
+                                <img :src="item.model_cover" class="service-img" />
+                                <div class="service-info">
+                                    <div class="service-name">{{ item.model_name }}</div>
+                                    <div v-if="item.worker_info" class="service-worker">
+                                        <img :src="item.worker_info.headimg" class="worker-av" />
+                                        <span>{{ item.worker_info.place }} {{ item.worker_info.fullname }}</span>
                                     </div>
-                                    <div v-if="item.worker_info" class="mt-2 text-xs text-600 flex align-items-center gap-1">
-                                        <img :src="item.worker_info.headimg" width="20px" height="20px" class="border-circle surface-800">
-                                        <div>{{ item.worker_info.place + ' ' + item.worker_info.fullname }}</div>
+                                    <div class="text-xs text-400 mt-1 line-height-3">
+                                        {{ item.last_usage_time ? '最后预约 ' + item.last_usage_time : '尚未使用，可提前1日预约' }}
+                                    </div>
+                                    <div class="flex align-items-center gap-2 mt-2">
+                                        <van-progress
+                                            :percentage="Math.round((item.total_usage / item.total_purchase) * 100)"
+                                            stroke-width="5" color="#7c5cbf" track-color="#f0e8ff"
+                                            class="flex-1" pivot-text=""
+                                        />
+                                        <span class="text-xs text-400">{{ item.total_usage }}/{{ item.total_purchase }}</span>
                                     </div>
                                 </div>
-                                <RouterLink :to="{path:'/member/medical/appointment', query:{model_id:item.model_id, services_worker_id:item.services_worker_id}}" class="flex align-items-center">
-                                    <div class="text-xs text-dblue-500">预约</div>
-                                    <el-icon class="text-dblue-500">
-                                        <ArrowRightBold />
-                                    </el-icon>
-                                </RouterLink>
-                            </div>
-                            <div class="flex align-items-center gap-2 w-4 absolute"
-                                style="top: -20px; right: 15px; z-index: 1;">
-                                <van-progress :percentage="(item.total_usage / item.total_purchase) * 100" stroke-width="8"
-                                    color="#eec137" track-color="#763cad" class="flex-1" pivot-text="" />
-                                <div class="text-xs text-white bg-purple-600">{{ item.total_usage }}/{{
-                                    item.total_purchase }}</div>
-                            </div>
+                                <van-icon name="arrow" size="14" color="#ccc" class="flex-shrink-0" />
+                            </RouterLink>
                         </van-swipe-item>
                     </van-swipe>
-                </div>
-                <div v-else class="bg-white m-1 mt-3 border-round-lg p-3">
-                    <el-skeleton :rows="1" animated  />
-                </div>
+                </template>
+                <van-skeleton v-else :row="2" />
             </div>
+
+            <!-- 预约记录 -->
+            <div class="section-card">
+                <div class="section-hd">
+                    <div class="section-dot" style="background:#3b82f6;" />
+                    <span class="section-title">预约记录</span>
+                </div>
+                <div class="apt-row">
+                    <RouterLink to="/member/medical/appointment/lists" class="apt-item no-underline">
+                        <div class="apt-num text-900">{{ totalAppointments }}</div>
+                        <div class="apt-label">累计预约</div>
+                    </RouterLink>
+                    <RouterLink to="/member/medical/appointment/lists?status=0" class="apt-item no-underline">
+                        <div class="apt-num text-orange-500">{{ pendingAppointments }}</div>
+                        <div class="apt-label">待确认</div>
+                    </RouterLink>
+                    <RouterLink to="/member/medical/appointment/lists?status=7" class="apt-item no-underline">
+                        <div class="apt-num text-pink-500">{{ waitEvaluate }}</div>
+                        <div class="apt-label">待评价</div>
+                    </RouterLink>
+                </div>
+                <div class="text-xs text-300 mt-2 text-center">评价后可获得积分 🎁</div>
+            </div>
+
+            <!-- 康复数据报告（方案三+方案四）-->
+            <div class="section-card">
+                <div class="section-hd mb-3">
+                    <div class="section-dot" style="background:#7c5cbf;" />
+                    <span class="section-title">康复报告 & 成就</span>
+                </div>
+                <BodyDataVisualizer />
+            </div>
+
+            <div style="height:24px;" />
         </div>
-        <div class="px-3 mt-3">
-            <div class="grid">
-                <div class="col">
-                    <div class="p-3 bg-red-50 border-1 border-red-100 border-round-lg h-8rem">
-                        <div class="relative">
-                            <svg class="icon absolute w-3rem h-3rem" aria-hidden="true" style="right: -5px; top: 0px;">
-                                <use xlink:href="#icon-tousujianyi"></use>
-                            </svg>
-                            <div class="text-lg text-900 font-bold">预约记录</div>
-                            <div class=" mt-1">
-                                <RouterLink to="/member/medical/appointment/lists" class="text-sm text-700">累计预约
-                                    <span class="font-bold text-red-600">{{ (appointmentLists || []).flat().filter(item => item.status >= 0).length }}</span>
-                                    次</RouterLink>
-                            </div>
-                            <div class="">
-                                <RouterLink to="/member/medical/appointment/lists?status=0" class="text-xs text-orange-300">待确认预约
-                                    <span class="font-bold text-red-600 text-sm">{{ (appointmentLists || []).flat().filter(item => item.status == 0).length }}</span>
-                                    次
-                                </RouterLink>
-                            </div>
-                        </div>
-                        <div class="flex justify-content-between mt-2">
-                            <div class="">
-                                <div class="text-xs mb-1">待评价</div>
-                                <RouterLink to="/member/medical/appointment/lists?status=7" class="relative text-xs">
-                                    <span class="text-lg text-red-600">{{ (appointmentLists || []).flat().filter(item => item.status == 7).length }}</span>
-                                    次
-                                </RouterLink>
-                            </div>
-                            <div class="">
-                                <div class="text-xs mb-1">待分享</div>
-                                <div class=" text-red-600">0</div>
-                            </div>
-                        </div>
-                        <div class="text-xs text-500 mt-1">评价分享可获得积分哦！</div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="px-3 pt-2 pb-1 bg-yellow-50 border-1 border-yellow-100 border-round-lg h-4rem">
-                        <div class="relative">
-                            <svg class="icon absolute w-3rem h-3rem" aria-hidden="true" style="right: -5px; top: 0px;">
-                                <use xlink:href="#icon-01_06"></use>
-                            </svg>
-                            <div class="text-lg font-bold">我的圈子</div>
-                            <div class="text-xs text-700">加入0个圈子</div>
-                            <div class="text-xs text-yellow-300">0热门话题</div>
-                        </div>
-                    </div>
-                    <div class="px-3 pt-2 pb-1 bg-purple-50 border-1 border-purple-100 border-round-lg h-4rem mt-2">
-                        <div class="relative">
-                            <svg class="icon absolute w-3rem h-3rem" aria-hidden="true" style="right: -5px; top: 0px;">
-                                <use xlink:href="#icon-pinglun-08"></use>
-                            </svg>
-                            <div class="text-lg font-bold">我的话题</div>
-                            <div class="text-xs text-700">共获得0条回复</div>
-                            <div class="text-xs text-purple-300">0条未读回复</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- <div v-if="additionalLists" class="px-3 mt-3">
-            <div class="p-1 bg-gray-50 border-1 border-gray-100 border-round-lg">
-                <div class="px-2 pt-3">运动康复</div>
-                <div class="p-3 mt-2 bg-white border-round-lg">
-                    <div v-for="(item, index) in additionalLists" :key="index">
-                        <RouterLink :to="{name:'member_workout_plan_details', params:{i:index}}" v-if="item.related_model == 'Video'" class="flex justify-content-between align-items-center gap-3 bg-white border-round-lg">
-                            <div>
-                                <img :src="item.cover" width="90px" height="68px" class="border-round-lg">
-                            </div>
-                            <div class="flex-1">
-                                <div class="text-sm text-dblue-900 font-bold ellipsis ellipsis-line-1">{{ item.title }}</div>
-                                <div  class="text-xs text-dblue-300 mt-1"> 
-                                    <van-text-ellipsis :content="item.description" rows="2" />
-                                </div>
-                            </div>
-                            <div class="flex align-items-center">
-                                <el-icon class="text-dblue-500">
-                                    <ArrowRightBold />
-                                </el-icon>
-                            </div>
-                        </RouterLink>
-                        <van-divider v-if="index!=additionalLists.length-1" />
-                    </div>
-                </div>
-            </div>
-        </div> -->
+
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, toRefs, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue';
+import { ref, computed, onMounted } from 'vue'
+import { RouterLink } from 'vue-router'
 import axios from '@/utils/axios'
-import moment from 'moment';
-import { ElMessage } from 'element-plus';
-import { useGlobalStore } from '@/store/global';
-const globalStore = useGlobalStore();
-import { useRouter, RouterLink } from 'vue-router'
-const router = useRouter()
-import { getDates } from "@/utils/common"
-import { TextEllipsis as vanTextEllipsis, Popup as vanPopup, Progress as vanProgress, Swipe as vanSwipe, SwipeItem as vanSwipeItem, Divider as vanDivider } from 'vant';
+import { useGlobalStore } from '@/store/global'
+import CheckIn from '@/components/member/CheckIn.vue'
+import BodyDataVisualizer from '@/components/member/BodyDataVisualizer.vue'
+import defaultAvatarImg from '@@/images/default_avatar.webp'
 
-import CheckIn from '@/components/member/CheckIn.vue';
+const globalStore   = useGlobalStore()
+const defaultAvatar = defaultAvatarImg
 
-
-// const checkin = ref(0);
-// const checkinSet = ref([1, 5, 10, 20, 30, 40, 50])
-// watch(() => checkin.value, (nval) => {
-//     const indexToReplace = (nval - 1) % 7;
-//     checkinSet.value.splice(0, (checkin.value - 7));
-//     let count = 0;
-//     while (count < (checkin.value - 7)) {
-//         checkinSet.value.push('50');
-//         count++;
-//     }
-// }, { immediate: true })
-
-
-const servicesLists = ref(null)
-// const additionalLists = ref(null)
-const appointmentLists = ref(null)
-const pendingList = ref(null);
-
-
-onMounted(async () => {
-    const res = await axios.get('/services/member_services_lists', {
-        bid: globalStore.memberInfo.bid,
-        card_number: globalStore.memberInfo.card_number,
-        model: 'MedicalServices'
-    }, { totast: 1 })
-
-    if (res.status) {
-        servicesLists.value = res.data
-        if (servicesLists.value) {
-            const worker = await axios.get('/worker/lists', { totast: 0 })
-            servicesLists.value.forEach(item1 => {
-                const matchedItem = worker.data.find(item2 => item2.id === item1.services_worker_id);
-                if (matchedItem) {
-                    item1.worker_info = matchedItem
-                }
-            });
-        }
-    }
-
-    // try {
-    //     const additional = await axios.get('/services/member_services_additional', {card_number: globalStore.memberInfo.card_number}, {totast:0})
-    //     if(additional.status){
-    //         additionalLists.value = additional.data;
-    //     }
-    // } catch (e){
-
-    // }
-    
-
-    try {
-        const params = {
-            card_number:globalStore.memberInfo.card_number, 
-            model:'MedicalServices',
-            type:2,
-        }
-        const { data } = await axios.get('/services/member_appointment_lists', params, {totast:0})
-        appointmentLists.value = data
-    } catch (error) {
-
-    }
-
-    try {
-        const params = {
-            card_number:globalStore.memberInfo.card_number
-        }
-        const { data } = await axios.get('/payment/pending_pay_list', params, {totast:0})
-        pendingList.value = data
-    } catch (error) {
-
-    }
- 
+// ── 头像 ─────────────────────────────────────────────────────
+const avatarUrl = computed(() => {
+    const av = (globalStore.memberInfo as any)?.avatar
+    return av ? globalStore.uploadsPath + av : ''
 })
-
-const waitEvaluate = computed (()=>{
-    (appointmentLists.value || []).flat().filter(item => item.status == 7).length
-})
-
-
-import avatar from '@@/images/default_avatar.webp'
-const defaultAvatar = (event) => {
-    event.target.src = avatar;
+function onAvatarError(e: Event) {
+    (e.target as HTMLImageElement).src = defaultAvatar
 }
 
+// ── 数据 ─────────────────────────────────────────────────────
+const servicesLists    = ref<any[]>([])
+const appointmentLists = ref<any[]>([])
+const circleData       = ref({ post_count: 0, like_received: 0, comment_count: 0 })
 
-const onCheckInSuccess = (points) => {
-    console.log(`签到成功！获得 ${points} 积分`);
-};
+const totalAppointments  = computed(() => (appointmentLists.value || []).flat().filter(i => i.status >= 0).length)
+const pendingAppointments = computed(() => (appointmentLists.value || []).flat().filter(i => i.status == 0).length)
+const waitEvaluate        = computed(() => (appointmentLists.value || []).flat().filter(i => i.status == 7).length)
 
+function onCheckInSuccess(points: number) {
+    console.log(`签到成功！获得 ${points} 积分`)
+}
 
+// ── 初始化 ───────────────────────────────────────────────────
+onMounted(async () => {
+    const cardNumber = (globalStore.memberInfo as any)?.card_number
+    const bid        = (globalStore.memberInfo as any)?.bid
+
+    await Promise.allSettled([
+
+        // 服务列表
+        axios.get('/services/member_services_lists', { bid, card_number: cardNumber, model: 'MedicalServices' }, { toast: 0 })
+            .then(async res => {
+                if (res?.data) {
+                    servicesLists.value = res.data
+                    const workers = await axios.get('/worker/lists', {}, { toast: 0 })
+                    servicesLists.value.forEach((item: any) => {
+                        item.worker_info = workers?.data?.find((w: any) => w.id === item.services_worker_id) ?? null
+                    })
+                }
+            }).catch(() => {}),
+
+        // 预约记录
+        axios.get('/services/member_appointment_lists', { card_number: cardNumber, model: 'MedicalServices', type: 2 }, { toast: 0 })
+            .then(res => { if (res?.data) appointmentLists.value = res.data }).catch(() => {}),
+
+        // 圈子数据
+        axios.get('member/circle_summary', { card_number: cardNumber }, { toast: 0 })
+            .then(res => { if (res?.data) circleData.value = res.data }).catch(() => {}),
+
+    ])
+})
 </script>
 
 <style scoped>
-.tags {
-    background: linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.0));
+.member-home { min-height: 100vh; background: #f7f4fc; }
+
+/* 英雄区 */
+.hero-section {
+    position: relative; overflow: hidden;
+    background: linear-gradient(135deg, #5b3fa6 0%, #7c5cbf 60%, #9b7de0 100%);
+    padding: 20px 16px 24px;
+}
+.hero-blob-1 {
+    position: absolute; width: 200px; height: 200px; border-radius: 50%;
+    background: rgba(255,255,255,0.07); top: -70px; right: -30px;
+}
+.hero-blob-2 {
+    position: absolute; width: 130px; height: 130px; border-radius: 50%;
+    background: rgba(255,255,255,0.05); bottom: -40px; left: 10px;
+}
+.hero-content { position: relative; z-index: 1; }
+
+.avatar-wrap { position: relative; flex-shrink: 0; }
+.member-avatar {
+    width: 52px; height: 52px; border-radius: 50%;
+    object-fit: cover; border: 3px solid rgba(255,255,255,0.5);
+}
+.avatar-dot {
+    position: absolute; bottom: 1px; right: 1px;
+    width: 11px; height: 11px; border-radius: 50%;
+    background: #10b981; border: 2px solid #fff;
+}
+.member-tag {
+    font-size: 10px; font-weight: 600;
+    padding: 2px 8px; border-radius: 10px;
+    background: rgba(255,255,255,0.2); color: #fff;
 }
 
-.block-bg {
-    background: url('@@/images/bg-low-poly-grid-haikei.png');
-    background-size: cover;
-
+/* 统计行 */
+.stats-row {
+    display: flex; align-items: center;
+    background: rgba(255,255,255,0.12);
+    border-radius: 14px; padding: 12px 0;
 }
+.stat-item { flex: 1; text-align: center; }
+.stat-num  { font-size: 20px; font-weight: 800; color: #fff; line-height: 1; }
+.stat-label { font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 3px; }
+.stat-div  { width: 1px; height: 26px; background: rgba(255,255,255,0.2); }
 
-.qd-bg {
-    background: linear-gradient(rgba(247, 233, 156, 0.4), rgba(255, 242, 166, 0));
-}
+/* 主体 */
+.home-body { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
 
-.is-checkin {
-    background: #f00;
+/* 快捷入口 */
+.quick-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; }
+.quick-item {
+    display: flex; flex-direction: column; align-items: center; gap: 5px;
+    padding: 12px 4px; border-radius: 14px; cursor: pointer;
 }
+.quick-label { font-size: 11px; font-weight: 600; }
 
-.el-progress-bar__outer {
-    background: none !important;
+/* 通用分区卡片 */
+.section-card {
+    background: #fff; border-radius: 16px;
+    padding: 14px; border: 1px solid #f0e8ff;
 }
+.section-hd { display: flex; align-items: center; gap: 7px; margin-bottom: 12px; }
+.section-dot { width: 4px; height: 16px; border-radius: 2px; flex-shrink: 0; }
+.section-title { font-size: 14px; font-weight: 700; color: #1a1a2e; }
+.section-sub   { font-size: 12px; color: #bbb; }
+
+/* 服务卡片 */
+.service-card {
+    display: flex; align-items: center; gap: 12px;
+    background: #faf7ff; border-radius: 12px; padding: 12px;
+}
+.service-img { width: 58px; height: 58px; border-radius: 10px; object-fit: cover; flex-shrink: 0; }
+.service-info { flex: 1; min-width: 0; }
+.service-name { font-size: 13px; font-weight: 700; color: #1a1a2e; }
+.service-worker {
+    display: flex; align-items: center; gap: 4px;
+    font-size: 11px; color: #888; margin-top: 3px;
+}
+.worker-av { width: 16px; height: 16px; border-radius: 50%; object-fit: cover; }
+
+/* 预约记录 */
+.apt-row   { display: flex; justify-content: space-around; }
+.apt-item  { flex: 1; text-align: center; padding: 4px 0; }
+.apt-num   { font-size: 22px; font-weight: 800; line-height: 1; }
+.apt-label { font-size: 11px; color: #aaa; margin-top: 3px; }
 </style>

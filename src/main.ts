@@ -26,6 +26,7 @@ import '@@/iconfont/iconfont.js'
 
 import { createApp, ref } from 'vue'
 import { createPinia } from 'pinia'
+import { Lazyload } from 'vant';
 
 import ElementPlus from 'element-plus'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
@@ -46,6 +47,7 @@ app.use(ElementPlus, {
     locale: zhCn,
 });
 app.use(head) // 使用 head 插件
+app.use(Lazyload);
 
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)

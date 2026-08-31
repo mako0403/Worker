@@ -1,4 +1,4 @@
-<template>
+﻿<template>
     <div class="h-full signup-bg-img" style="background: linear-gradient(rgba(242,227,248, 0.6), rgba(242,227,248, 0.1));">
         <el-container class="pt-6">
             <el-main class="px-5">
@@ -12,27 +12,27 @@
                                 <img src="@@/images/logo_icon.png" alt="logo" width="48px" />
                             </div>
                         </div>
-                        <div class="text-2xl font-bold mt-3">你好，</div>
-                        <div class="text-2xl font-bold">欢迎使用「一凡妈妈」</div>
-                        <div class="mt-1 text-xs">注册成为会员，即可开始使用</div>
+                        <div class="text-2xl font-bold mt-3">ä½ å¥½ï¼Œ</div>
+                        <div class="text-2xl font-bold">æ¬¢è¿Žä½¿ç”¨ã€Œä¸€å‡¡å¦ˆå¦ˆã€</div>
+                        <div class="mt-1 text-xs">æ³¨å†Œæˆä¸ºä¼šå‘˜ï¼Œå³å¯å¼€å§‹ä½¿ç”¨</div>
                         <el-form class="mt-6">
                             <div class="w-full mb-4">
                                 <div class="flex align-items-center text-sm mb-2">
                                     <el-icon class="mr-1">
                                         <Cellphone />
                                     </el-icon>
-                                    手机号码
+                                    æ‰‹æœºå·ç 
                                 </div>
-                                <el-input v-model="userForm.telphone" size="large" placeholder="请输入手机号码" />
+                                <el-input v-model="userForm.telphone" size="large" placeholder="è¯·è¾“å…¥æ‰‹æœºå·ç " />
                             </div>
                             <div class="w-full mb-4">
                                 <div class="flex align-items-center text-sm mb-2">
                                     <el-icon class="mr-1">
                                         <Lock />
                                     </el-icon>
-                                    密码
+                                    å¯†ç 
                                 </div>
-                                <el-input v-model="userForm.password" type="password" placeholder="请输入登录密码" size="large"
+                                <el-input v-model="userForm.password" type="password" placeholder="è¯·è¾“å…¥ç™»å½•å¯†ç " size="large"
                                     show-password />
                             </div>
                             <div class="w-full mb-4">
@@ -40,9 +40,9 @@
                                     <el-icon class="mr-1">
                                         <Lock />
                                     </el-icon>
-                                    确认密码
+                                    ç¡®è®¤å¯†ç 
                                 </div>
-                                <el-input v-model="userForm.re_password" type="password" placeholder="请再次输入密码"
+                                <el-input v-model="userForm.re_password" type="password" placeholder="è¯·å†æ¬¡è¾“å…¥å¯†ç "
                                     size="large" show-password />
                             </div>
                             <div class="w-full mb-4">
@@ -50,28 +50,28 @@
                                     <el-icon class="mr-1">
                                         <Message />
                                     </el-icon>
-                                    验证码
+                                    éªŒè¯ç 
                                 </div>
                                 <div class="sms-code-box relative">
-                                    <el-input v-model="userForm.verify_sms" size="large" placeholder="请输入验证码"
+                                    <el-input v-model="userForm.verify_sms" size="large" placeholder="è¯·è¾“å…¥éªŒè¯ç "
                                         style="width: 100%;" />
                                     <el-button :disabled="isCounting" @click="sendSmsCode"
                                         :type="isCounting ? 'default' : 'primary'"
                                         :class="{ 'bg-dblue-500 border-dblue-700': !isCounting }" size="small"
                                         class="absolute" style="right:15px">
-                                        {{ isCounting ? `${countdown}秒后重新发送` : '发送验证码' }}
+                                        {{ isCounting ? `${countdown}ç§’åŽé‡æ–°å‘é€` : 'å‘é€éªŒè¯ç ' }}
                                     </el-button>
                                 </div>
                             </div>
                             <div class="w-full mb-4">
                                 <el-button type="primary" plain round size="large" @click="doSignup"
-                                    class="w-full bg-dblue-500 text-white border-dblue-700">立即注册</el-button>
+                                    class="w-full bg-dblue-500 text-white border-dblue-700">ç«‹å³æ³¨å†Œ</el-button>
                             </div>
                         </el-form>
                     </el-col>
                     <el-col :sm="6" :md="7" :lg="9">
-                        <div class="text-center text-xs text-500">已有账户？<RouterLink to="/login" class="text-dblue-900">
-                                去登录</RouterLink>
+                        <div class="text-center text-xs text-500">å·²æœ‰è´¦æˆ·ï¼Ÿ<RouterLink to="/login" class="text-dblue-900">
+                                åŽ»ç™»å½•</RouterLink>
                         </div>
                     </el-col>
                 </el-row>
@@ -88,13 +88,9 @@ import { onMounted, ref, reactive } from "vue";
 import { useRoute, useRouter, RouterLink } from "vue-router";
 import axios from '@/utils/axios';
 import { useGlobalStore } from '@/store/global';
-import { login } from "@/api/user";
 
 import { ElMessage } from 'element-plus';
 
-import { Field as vanField, Button as vanButton } from 'vant';
-
-import WeChatAuth from "@/utils/wechatAuth";
 
 const globalStore = useGlobalStore();
 
@@ -109,7 +105,7 @@ let timer: NodeJS.Timeout;
 const sendSmsCode = async () => {
     if (isCounting.value) return;
 
-    // 开始倒计时
+    // å¼€å§‹å€’è®¡æ—¶
     isCounting.value = true;
     countdown.value = 60;
 
@@ -127,7 +123,7 @@ const sendSmsCode = async () => {
         clearInterval(timer);
         isCounting.value = false;
     }else{
-        ElMessage.success('验证码已发送');
+        ElMessage.success('éªŒè¯ç å·²å‘é€');
     }
 };
 
@@ -135,7 +131,7 @@ const sendSmsCode = async () => {
 const userForm = reactive({
     bid:0,
     worker_id:0,
-    referrer:'', // 推荐人会员卡号
+    referrer:'', // æŽ¨èäººä¼šå‘˜å¡å·
     telphone: '',
     password: '',
     re_password:'',
@@ -148,10 +144,10 @@ const userForm = reactive({
 
 const doSignup = async () => {
     if (!userForm.telphone || !userForm.password || !userForm.re_password || !userForm.verify_sms) {
-        ElMessage.warning('手机号码、密码或验证码不能为空');
+        ElMessage.warning('æ‰‹æœºå·ç ã€å¯†ç æˆ–éªŒè¯ç ä¸èƒ½ä¸ºç©º');
         return;
     } else if(userForm.password != userForm.re_password){
-        ElMessage.warning('两次输入的密码不一致');
+        ElMessage.warning('ä¸¤æ¬¡è¾“å…¥çš„å¯†ç ä¸ä¸€è‡´');
         return;
     } else {
         const res = await axios.post('/member/signup', userForm)
@@ -179,44 +175,7 @@ const doSignup = async () => {
     }
 };
 
-const weChatAuth = new WeChatAuth(window.location.href, globalStore.replace);
-const wechatUserInfo = ref<any>(null);
-
-const getWeChatUserInfo = async (code: string) => {
-    try {
-        const accessTokenResponse = await weChatAuth.getAccessToken(code);
-        const { access_token, openid } = accessTokenResponse;
-        const userInfo = await weChatAuth.getUserInfo(access_token, openid);
-        wechatUserInfo.value = userInfo;
-        // 将微信用户信息合并到表单中
-        userForm.openid = userInfo.openid;
-        userForm.avatar = userInfo.headimgurl;
-        userForm.nickname = userInfo.nickname;
-    } catch (error) {
-        console.error('Failed to get user info', error);
-    }
-};
-
-
 onMounted(() => {
-    if (weChatAuth.isWeChatBrowser()) {
-        // 在微信浏览器中访问，检查 URL 中是否有 code 参数
-        if (window.location.search.includes('code')) {
-            const urlParams = new URLSearchParams(window.location.search);
-            const code = urlParams.get('code');
-            if (code) {
-                getWeChatUserInfo(code);
-            }
-
-            if (window.location.search.includes('state')) {
-                useGlobalStore().setReplace(route.query.state)
-            }
-        } else {
-            // 未找到 code 参数，进行授权
-            weChatAuth.authorize();
-        }
-    }
-
     if(route.query.bid){
         userForm.bid = route.query.bid;
     }
@@ -253,6 +212,6 @@ onMounted(() => {
     background-size: 115% auto ;
     background-repeat: no-repeat;
     background-position: left top;
-    transform: scaleX(-1); /* 水平翻转 */
+    transform: scaleX(-1); /* æ°´å¹³ç¿»è½¬ */
 }
 </style>

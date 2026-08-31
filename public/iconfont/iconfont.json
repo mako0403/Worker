@@ -6,6 +6,41 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "3347321",
+      "name": "育儿",
+      "font_class": "yuer",
+      "unicode": "e60a",
+      "unicode_decimal": 58890
+    },
+    {
+      "icon_id": "4018847",
+      "name": "乳腺-01",
+      "font_class": "ruxian-",
+      "unicode": "e64d",
+      "unicode_decimal": 58957
+    },
+    {
+      "icon_id": "5141545",
+      "name": "哺乳",
+      "font_class": "buru",
+      "unicode": "e668",
+      "unicode_decimal": 58984
+    },
+    {
+      "icon_id": "5356103",
+      "name": "乳房护理",
+      "font_class": "rufanghuli",
+      "unicode": "e64f",
+      "unicode_decimal": 58959
+    },
+    {
+      "icon_id": "36789980",
+      "name": "育儿嫂",
+      "font_class": "yuersao",
+      "unicode": "e651",
+      "unicode_decimal": 58961
+    },
+    {
       "icon_id": "2480502",
       "name": "瑜伽",
       "font_class": "Yoga",

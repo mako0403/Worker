@@ -67,23 +67,41 @@
                         </svg>
                     </div>
                     <div class="mb-3" v-for="(item, index) in memberLists" :key="index">
-                        <div class="border-1 border-round-3xl border-gray-100 shadow-1 p-3 relative">
+                        
+                        <div class="border-1 border-round-3xl border-gray-100 shadow-1 p-3 relative" :class="{'bg-blue-50': item.source!='1'}">
                             <div class="flex gap-3">
                                 <div>
-                                    <el-progress type="dashboard" :width="Number(67)" :stroke-width="Number(4)"
+                                    <el-progress type="dashboard" :width="Number(77)" :stroke-width="Number(4)"
                                         :percentage="item.usage_rate" status="success">
                                         <template #default="{ percentage }">
-                                            <el-avatar shape="circle" :size="55">
+                                            <el-avatar shape="circle" :size="65">
                                                 <img :src="item.avatar || defaultAvatar" />
                                             </el-avatar>
                                         </template>
                                     </el-progress>
                                 </div>
                                 <div class="w-full">
-                                    <div class="font-bold text-md mt-2 mb-1">{{ item.fullname }}</div>
+                                    <div class="">
+                                        <span class="font-bold text-md">{{ item.fullname }}</span>
+                                        <span v-if="item.source!=1" class="text-xs text-center text-blue-200 font-thin ml-2">{{ item.source }}</span>
+                                    </div>
                                     <!-- <div class="text-orange-500 text-sm"><span class="text-gray-500 mr-1">会员分组</span>{{ item.card_rule.name }}</div> -->
-                                    <div v-if="searchForm.group!=2" class="text-gray-600 text-xs">
+                                    <div v-if="searchForm.group!=2" class="text-gray-600 text-xs mt-1">
                                         最后预约 {{ item.last_usage_day }} 天前
+                                    </div>
+                                    <div class="text-gray-600 text-xs flex align-items-center mt-1">
+                                        <div v-if="item.birthday" class="bg-blue-50 text-blue-400 py-1 px-2 border-round-sm mr-2">
+                                            <span class="mr-1 ">生日</span>
+                                            <span class="text-xs">{{ item.birthday }}</span>
+                                        </div>
+                                        <div v-if="item.remind_date1 && moment(item.remind_date1).isAfter(moment().startOf('day'), 'day')" class=" bg-red-50 text-red-400 py-1 px-2 border-round-sm">
+                                            <span class="mr-1">预产</span>
+                                            <span class="">{{ item.remind_date1 }}</span>
+                                        </div>
+                                        <div v-if="item.remind_date2 && moment(item.remind_date1).isBefore(moment().startOf('day'), 'day')" class=" bg-orange-50 text-orange-400 py-1 px-2 border-round-sm">
+                                            <span class="mr-1">分娩</span>
+                                            <span class="text-xs">{{ item.remind_date2 }}</span>
+                                        </div>
                                     </div>
                                     <div v-if="searchForm.group==2" class="text-gray-400 text-sm">该患者尚未购买任何服务</div>
                                 </div>
@@ -98,7 +116,7 @@
                                     </div>
                                     <div class="ml-2" v-if="item.card_number in isHaveVideoRecord">
                                         <div class="border-1 border-bluegray-100 border-circle pt-1 px-1 vertical-align-middle">
-                                            <RouterLink class="text-bluegray-800"> <!-- :to="`/worker/video/record`" params="{ card_number: item.card_number }"  -->
+                                            <RouterLink :to="`/worker/video/record`" params="{ card_number: item.card_number }" class="text-bluegray-800">
                                                 <svg class="icon" aria-hidden="true" style="width: 16px; height: 16px;">
                                                     <use xlink:href="#icon-paobu"></use>
                                                 </svg>
@@ -292,6 +310,8 @@ const route = useRoute()
 import axios from '@/utils/axios'
 import { Search as vanSearch, DropdownMenu as vanDropdownMenu, DropdownItem as vanDropdownItem, Cell as vanCell, Popup as vantpopup} from 'vant';
 import { ElMessage } from 'element-plus';
+import moment from 'moment';
+
 
 import { useGlobalStore } from '@/store/global'
 const { workerConfig, globalConfig } = toRefs(useGlobalStore());

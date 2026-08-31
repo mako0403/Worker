@@ -319,7 +319,7 @@
     </el-dialog>
 
     <vantpopup v-model:show="showRemind" round closeable position="bottom" :style="{ height: '70%' }">
-        <Addremind :card-number="addRemindCard" :worker-id="workerConfig.id"
+        <Addremind :card-number="addRemindCard" :worker-id="store.workerConfig.id"
             @remind-added="(n) => { if (n === true) { showRemind = false; addRemindCard = ''; } }" />
     </vantpopup>
 
@@ -331,22 +331,17 @@
 </template>
 <script setup lang="ts">
 import { ref, toRefs, onMounted, onBeforeUnmount, watch, nextTick } from "vue";
-import { useRouter } from "vue-router";
-const router = useRouter();
-
-import axios from "@/utils/axios";
 import moment from "moment"
 import { getDates, getCurrentDate, generateTimeRange, afterTimeRange, continuousTimeRange, formatTimeLimit, addMinutesToTime } from "@/utils/common"
 import { Calendar as vantcalendar, showToast, Dialog, showConfirmDialog, Popup as vantpopup, TimePicker as vanTimePicker } from 'vant';
 
 //import Archive from '@/views/worker/appointment/Archive.vue'
 import Addremind from '@/views/worker/member/AddRemind.vue'
-import { useGlobalStore } from '@/store/global'
-const { workerConfig } = toRefs(useGlobalStore());
+import { useGlobal } from '@/utils/Global';
+const { axios, store, router, route, ElMessage, showLoading, hideLoading } = useGlobal();
 
 
 import defaultAvatar from '@@/images/default_avatar.webp'
-import { ElMessage } from "element-plus";
 
 import EChartsComponent from '@/components/common/ECharts.vue';
 const showAppointmentsSummary = ref(false)
@@ -385,7 +380,7 @@ const addRemindCard = ref('');
 
 const choseDate = ref(getDates(15)[0].date) // 默认选择当日
 const hasOffday = ref([])
-watch(() => workerConfig.value.offday, (nval, oval) => {
+watch(() => store.workerConfig.offday, (nval, oval) => {
     if (nval) {
         let cnt = 0;
         hasOffday.value = nval.split(',').map((dateString: any, i) => {
@@ -427,8 +422,8 @@ const getAppointmentLists = async () => {
             .map(({ date }) => date)
             .join(',');
         await axios.get('/services/appointment_lists', {
-            'bid': workerConfig.value.bid,
-            'services_worker_id': workerConfig.value.id,
+            'bid': store.workerConfig.bid,
+            'services_worker_id': store.workerConfig.id,
             'date': query_date //choseDate.value
         }, { toast: 0 }).then(res => {
             appointmentLists.value = res.data || []
@@ -528,7 +523,7 @@ watch(() => choseAppointmentId.value, async (nval, oval) => {
         if (selectedAppointment) {
             try {
                 await axios.get('/services/member_services_lists', {
-                    bid: workerConfig.value.bid,
+                    bid: store.workerConfig.bid,
                     card_number: selectedAppointment.card_number,
                     services_worker_id: selectedAppointment.services_worker_id,
                     model: 'MedicalServices'
@@ -692,7 +687,7 @@ const getStatusText = (status: string) => {
 const echartOptions = ref([]);
 watch(() => showAppointmentsSummary.value, async (nval, oval) => {
     if (nval) {
-        const res = await axios.get('/services/get_branch_appointments_summary', { bid: workerConfig.value.bid, date: choseDate.value }, { toast: 0 })
+        const res = await axios.get('/services/get_branch_appointments_summary', { bid: store.workerConfig.bid, date: choseDate.value }, { toast: 0 })
         const data = res.data; // Assume data is in the required format
         if(data){
             echartOptions.value = generateEchartOptions(data);

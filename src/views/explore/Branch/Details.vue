@@ -66,7 +66,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue';
-import { useGlobal } from '@/components/Global';
+import { useGlobal } from '@/utils/Global';
 import { ElMessage } from 'element-plus';
 const { route, router, axios, store } = useGlobal();
 

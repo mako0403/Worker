@@ -1,73 +1,82 @@
 <template>
-    <el-affix position="bottom" :offset="0" class="w-full" style="height: 56px !important;">
-        <div class="w-full text-center border-round-top-2xl border-top-1 border-gray-100 bg-white shadow-1" style="height: 56px !important;">
-            <div class="h-full flex justify-content-between align-items-center px-3">
-                <div class="w-full ">
-                    <RouterLink to="/member" class=" h-full text-500 block" :class="{ 'text-dblue-600': tabbarName == 'member' }"
-                        @click="updateTabbarName('member')">
-                        <el-icon size="16px">
-                            <Files />
-                        </el-icon>
-                        <div class="text-xs">会员中心</div>
-                    </RouterLink>
-                </div>
-                <div class="w-full ">
-                    <RouterLink to="/member/medical/appointment" class=" h-full text-500 block" :class="{ 'text-dblue-600': tabbarName == 'appointment' }"
-                        @click="updateTabbarName('appointment')">
-                        <el-icon size="16px">
-                            <User  />
-                        </el-icon>
-                        <div class="text-xs">我的服务</div>
-                    </RouterLink>
-                </div>
-                <!-- <div class="w-full relative">
-                    <div class="border-circle bg-dblue-500 h-full" style="width: 56px; min-height: 56px; margin-left: auto; margin-right: auto; margin-top:-26px;" @click="showSheet=true">
-                        <img :src="logoIcon" style="width:50px; height: 50px;" />
-                    </div>
-                    <ActionSheet v-model:show="showSheet" :actions="actions" cancel-text="取消" description="请选择操作项目" close-on-click-action @select="$emit('choseSheet', $event)"/>
-                </div> -->
-                <div class="w-full ">
-                    <RouterLink to="/member/workout/plan" class="text-500 block  h-full" :class="{ 'text-dblue-600': tabbarName == 'workout' }"
-                        @click="updateTabbarName('workout')">
-                        <el-icon size="16px">
-                            <ChatLineRound />
-                        </el-icon>
-                        <div class="text-xs">运动康复</div>
-                    </RouterLink>
-                </div>
-                <div class="w-full ">
-                    <RouterLink to="/member/aichat" class="text-500 block h-full" :class="{ 'text-dblue-600': tabbarName == 'aichat' }"
-                        @click="updateTabbarName('aichat')">
-                        <el-icon size="16px">
-                            <SetUp  />
-                        </el-icon>
-                        <div class="text-xs">妈妈智问</div>
-                    </RouterLink>
-                </div>
+    <div
+        class="w-full surface-0 border-top-1 border-gray-100"
+        style="height:56px;"
+    >
+        <div class="h-full flex justify-content-around align-items-center px-2">
+
+            <!-- 会员中心 -->
+            <div
+                class="flex flex-column align-items-center justify-content-center gap-1 cursor-pointer flex-1"
+                :class="isActive('/member') ? 'text-purple-500' : 'text-400'"
+                @click="go('/member')"
+            >
+                <van-icon :name="isActive('/member') ? 'contact' : 'user-circle-o'" size="22" />
+                <span style="font-size:10px;line-height:1;">会员中心</span>
             </div>
+
+            <!-- 我的服务 -->
+            <div
+                class="flex flex-column align-items-center justify-content-center gap-1 cursor-pointer flex-1"
+                :class="isActive('/member/medical/appointment') ? 'text-purple-500' : 'text-400'"
+                @click="go('/member/medical/appointment')"
+            >
+                <van-icon :name="isActive('/member/medical/appointment') ? 'notes' : 'notes-o'" size="22" />
+                <span style="font-size:10px;line-height:1;">我的服务</span>
+            </div>
+
+            <!-- 中间：圈子快捷入口 -->
+            <div class="flex flex-column align-items-center justify-content-center flex-1">
+                <div
+                    class="flex align-items-center justify-content-center border-circle shadow-2 cursor-pointer"
+                    style="width:46px;height:46px;margin-top:-18px;background:linear-gradient(135deg,#7c5cbf,#e05c8a);"
+                    @click="go('/member/circle')"
+                >
+                    <van-icon name="fire-o" size="20" color="#fff" />
+                </div>
+                <span
+                    class="text-purple-500"
+                    style="font-size:10px;line-height:1;margin-top:3px;"
+                >圈子</span>
+            </div>
+
+            <!-- 运动康复 -->
+            <div
+                class="flex flex-column align-items-center justify-content-center gap-1 cursor-pointer flex-1"
+                :class="isActive('/member/workout') ? 'text-purple-500' : 'text-400'"
+                @click="go('/member/workout/plan')"
+            >
+                <van-icon :name="isActive('/member/workout') ? 'medal' : 'medal-o'" size="22" />
+                <span style="font-size:10px;line-height:1;">运动康复</span>
+            </div>
+
+            <!-- 妈妈智问 -->
+            <div
+                class="flex flex-column align-items-center justify-content-center gap-1 cursor-pointer flex-1"
+                :class="isActive('/member/aichat') ? 'text-purple-500' : 'text-400'"
+                @click="go('/member/aichat')"
+            >
+                <van-icon :name="isActive('/member/aichat') ? 'chat' : 'chat-o'" size="22" />
+                <span style="font-size:10px;line-height:1;">妈妈智问</span>
+            </div>
+
         </div>
-    </el-affix>
+    </div>
 </template>
+
 <script setup lang="ts">
-defineProps(['choseSheet'])
-import { ref, toRefs } from 'vue'
-import { RouterLink } from 'vue-router';
-import { useGlobalStore } from '@/store/global'
-const { userManager, workerConfig, tabbarName, updateTabbarName } = toRefs(useGlobalStore());
-import { ActionSheet } from 'vant';
+import { useRoute, useRouter } from 'vue-router'
 
+const route  = useRoute()
+const router = useRouter()
 
-import logoIcon from '@@/images/logo_icon.png';
+// 路由激活判断：前缀匹配（除首页精确匹配）
+function isActive(path: string): boolean {
+    if (path === '/member') return route.path === '/member'
+    return route.path.startsWith(path)
+}
 
-const showSheet = ref(false);
-const actions = [
-    { name: '服务项目收费',icon: 'todo-list-o', className:'text-md' },
-    { name: '新建患者档案', icon: 'friends-o', className:'text-md' },
-    { name: '产后盆底康复评估', icon: 'completed-o', className:'text-md' },
-    // { name: '运动康复收费', icon: 'flag-o', className:'text-md', subname:'' },
-];
-
-
-
+function go(path: string) {
+    if (route.path !== path) router.push(path)
+}
 </script>
-<style scoped></style>

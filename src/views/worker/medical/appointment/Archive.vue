@@ -2,19 +2,93 @@
     <div class="w-full h-full relative">
         <HeaderSimple content="治疗记录归档" />
         <div class="record-form">
-            <div class="mt-0">
+            <div class="mt-0 flex gap-3">
+                <el-input v-model="submitForm.refer_1" style="max-width: 600px" placeholder="CM">
+                    <template #prepend>腰围</template>
+                </el-input>
+            </div>
+            <div class="mt-3 flex gap-3">
+                <el-input v-model="submitForm.refer_2" style="max-width: 600px" placeholder="CM">
+                    <template #prepend>臀围</template>
+                </el-input>
+                <el-input v-model="submitForm.refer_3" style="max-width: 600px" placeholder="CM">
+                    <template #prepend>髂嵴间宽</template>
+                </el-input>
+
+            </div>
+            <div class="mt-3 flex align-items-center">
+                <div class="text-sm text-500 bg-gray-100 border-1 border-gray-300 border-right-none px-3 border-round-left-sm"
+                    style="padding-top:9px; padding-bottom:9px;">腹直肌分离宽度</div>
+                <el-select size="large" v-model="submitForm.refer_4" placeholder="请选择最新测量值" class="flex-1">
+                    <el-option key="" label="请选择" value="" />
+                    <el-option key="0" label="正常(<1指)" value="4:0" />
+                    <el-option key="1" label="轻度(1-2指)" value="4:1" />
+                    <el-option key="2" label="中度(2-3指)" value="4:2" />
+                    <el-option key="3" label="重度(≥3指)" value="4:3" />
+                </el-select>
+            </div>
+            <div class="mt-3 flex align-items-center">
+                <div class="text-sm text-500 bg-gray-100 border-1 border-gray-300 border-right-none px-3 border-round-left-sm"
+                    style="padding-top:9px; padding-bottom:9px;">漏尿</div>
+                <el-select size="large" v-model="submitForm.refer_5" placeholder="请选择最新问询值" class="flex-1">
+                    <el-option key="" label="请选择" value="" />
+                    <el-option key="0" label="无漏尿" value="5:0" />
+                    <el-option key="1" label="偶尔(剧烈运动/咳嗽打喷嚏时)" value="5:1" />
+                    <el-option key="2" label="轻度(小量、频率较高)" value="5:2" />
+                    <el-option key="3" label="中度(中量、需护垫)" value="5:3" />
+                    <el-option key="4" label="重度(大量、频繁需护理用品)" value="5:4" />
+                </el-select>
+            </div>
+            <div class="mt-3 flex align-items-center">
+                <div class="text-sm text-500 bg-gray-100 border-1 border-gray-300 border-right-none px-3 border-round-left-sm"
+                    style="padding-top:9px; padding-bottom:9px;">妊辰纹</div>
+                <el-select size="large" v-model="submitForm.refer_6" placeholder="请选择最新观察值" class="flex-1">
+                    <el-option key="" label="请选择" value="" />
+                    <el-option key="0" label="无明显妊娠纹" value="5:0" />
+                    <el-option key="1" label="颜色较浅，数量少" value="5:1" />
+                    <el-option key="2" label="颜色明显，数量中等" value="5:2" />
+                    <el-option key="3" label="范围较大、颜色深" value="5:3" />
+                    <el-option key="4" label="伴随皮肤松弛或萎缩" value="5:4" />
+                </el-select>
+            </div>
+            <div class="mt-3 flex align-items-center">
+                <div class="text-sm text-500 bg-gray-100 border-1 border-gray-300 border-right-none px-3 border-round-left-sm"
+                    style="padding-top:9px; padding-bottom:9px;">耻骨联合间隙</div>
+                <el-select size="large" v-model="submitForm.refer_7" placeholder="请选择最新测量值" class="flex-1">
+                    <el-option key="" label="请选择" value="" />
+                    <el-option key="0" label="正常(<0.5cm)" value="4:0" />
+                    <el-option key="1" label="轻度分离(0.5–1cm)" value="4:1" />
+                    <el-option key="2" label="中度分离(1–2cm)" value="4:2" />
+                    <el-option key="3" label="重度分离(≥2cm)" value="4:3" />
+                </el-select>
+            </div>
+            <div class="mt-3 flex align-items-center">
+                <div class="text-sm text-500 bg-gray-100 border-1 border-gray-300 border-right-none px-3 border-round-left-sm"
+                    style="padding-top:9px; padding-bottom:9px;">肌力值</div>
+                <el-select size="large" v-model="submitForm.refer_8" placeholder="请选择最新测量值" class="flex-1">
+                    <el-option key="" label="请选择" value="" />
+                    <el-option key="0" label="前静息阶段" value="5:0" />
+                    <el-option key="1" label="快肌（Ⅱ类纤维）阶段" value="5:1" />
+                    <el-option key="2" label="慢肌（Ⅰ类纤维）阶段" value="5:2" />
+                    <el-option key="3" label="耐力测试阶段" value="5:3" />
+                    <el-option key="4" label="后静息阶段" value="5:4" />
+                </el-select>
+            </div>
+            <div class="mt-3">
                 <div class="mb-2 flex justify-content-between align-items-center">
                     <div class="text-md">治疗效果</div>
                     <div class="text-xs text-red-200">患者可见，可分享</div>
                 </div>
-                <el-input v-model="submitForm.result" :rows="3" type="textarea" class="w-full" placeholder="请简短描述治疗效果..." />
+                <el-input v-model="submitForm.result" :rows="3" type="textarea" class="w-full"
+                    placeholder="请简短描述治疗效果..." />
             </div>
             <div class="mt-3">
                 <div class="mb-2 flex justify-content-between align-items-center">
                     <div class="text-md">康复建议</div>
                     <div class="text-xs text-red-200">患者可见</div>
                 </div>
-                <el-input v-model="submitForm.exhort" :rows="3" type="textarea" class="w-full" placeholder="请输入康复建议..." />
+                <el-input v-model="submitForm.exhort" :rows="3" type="textarea" class="w-full"
+                    placeholder="请输入康复建议..." />
             </div>
             <div class="mt-3">
                 <div class="mb-2 flex justify-content-between align-items-center">
@@ -122,6 +196,7 @@ import Compressor from 'compressorjs';
 
 import HeaderSimple from '@/components/layout/header/HeaderSimple.vue';
 
+
 const { params } = useRoute();
 const router = useRouter();
 
@@ -131,6 +206,14 @@ const submitForm = ref({
     exhort: '',
     remarks: '',
     comparison_image: '',
+    refer_1: '',
+    refer_2: '',
+    refer_3: '',
+    refer_4: '',
+    refer_5: '',
+    refer_6: '',
+    refer_7: '',
+    refer_8: '',
 })
 onMounted(async () => {
     await axios.get('/services/get_appointment', { id: params.id }).then(res => {
@@ -233,32 +316,52 @@ const pimages = async (file1, file2) => {
     };
 
     try {
-        const [loadedImg1, loadedImg2] = await Promise.all([loadImage(img1, file1), loadImage(img2, file2)]);
+        const [loadedImg1, loadedImg2] = await Promise.all([
+            loadImage(img1, file1),
+            loadImage(img2, file2),
+        ]);
 
-        const canvasSize = 1280;
-        const padding = 20;
-        const imageSpacing = 20;
+        const padding = 20; // 外边距
+        const imageSpacing = 20; // 两图之间的间距
         const borderWidth = 1;
         const labelHeight = 0;
-        const availableWidth = canvasSize - 2 * padding - imageSpacing - 4 * borderWidth;
-        const imageWidth = availableWidth / 2;
 
-        canvas.width = canvasSize;
-        canvas.height = canvasSize;
+        // ✅ 以较短的一边为参考，等比例缩放
+        const targetHeight = 1000; // 两张图显示高度（像素）
+        const scale1 = targetHeight / loadedImg1.height;
+        const scale2 = targetHeight / loadedImg2.height;
 
-        const scale1 = (canvasSize - 2 * padding - 2 * borderWidth - labelHeight) / loadedImg1.height;
-        const scale2 = (canvasSize - 2 * padding - 2 * borderWidth - labelHeight) / loadedImg2.height;
+        const displayWidth1 = loadedImg1.width * scale1;
+        const displayWidth2 = loadedImg2.width * scale2;
 
-        const scaledWidth1 = loadedImg1.width * scale1;
-        const scaledWidth2 = loadedImg2.width * scale2;
+        // 计算画布宽高
+        const canvasWidth =
+            padding * 2 +
+            borderWidth * 4 +
+            displayWidth1 +
+            displayWidth2 +
+            imageSpacing;
+        const canvasHeight = padding * 2 + borderWidth * 2 + targetHeight;
 
-        const cropWidth1 = (scaledWidth1 - imageWidth) / 2;
-        const cropWidth2 = (scaledWidth2 - imageWidth) / 2;
+        canvas.width = canvasWidth;
+        canvas.height = canvasHeight;
 
-        requestAnimationFrame(() => {
-            updateImage(context, loadedImg1, loadedImg2, cropWidth1, cropWidth2, imageSpacing, borderWidth, labelHeight, padding, canvasSize, imageWidth);
-        });
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        // 应用滤镜参数（如果有）
+        context.filter = `brightness(${brightness.value}%) contrast(${contrast.value}%) saturate(${saturation.value}%) hue-rotate(${hueRotate.value}deg)`;
+
+        // 左右绘制两张图
+        const dx1 = padding + borderWidth;
+        const dy = padding + borderWidth;
+        const dx2 = dx1 + displayWidth1 + imageSpacing + borderWidth * 2;
+
+        drawRoundedImage(context, loadedImg1, 0, dx1, dy, displayWidth1, targetHeight, borderWidth, labelHeight, '');
+        drawRoundedImage(context, loadedImg2, 0, dx2, dy, displayWidth2, targetHeight, borderWidth, labelHeight, '');
+
+        combinedImage.value = canvas.toDataURL('image/png');
     } catch (error) {
+        console.error(error);
         throw new Error('Error loading images');
     }
 };
@@ -310,10 +413,10 @@ watch([brightness, contrast, saturation, hueRotate], () => {
 });
 
 const handleSubmit = async () => {
-    if (!submitForm.value.exhort) {
-        ElMessage({ message: '请填写康复建议', type: 'error' })
-        return
-    }
+    // if (!submitForm.value.exhort) {
+    //     ElMessage({ message: '请填写康复建议', type: 'error' })
+    //     return
+    // }
 
     if (combinedImage.value) {
         submitForm.value.comparison_image = combinedImage.value
@@ -340,7 +443,15 @@ const handleSubmit = async () => {
                 date: appointment.value.date,
                 exhort: '',
                 remarks: '',
-                comparison_image: ''
+                comparison_image: '',
+                refer_1: '',
+                refer_2: '',
+                refer_3: '',
+                refer_4: '',
+                refer_5: '',
+                refer_6: '',
+                refer_7: '',
+                refer_8: '',
             }
             router.go(-1)
         }

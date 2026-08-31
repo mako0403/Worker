@@ -5,15 +5,19 @@
                 <Sidebar />
             </el-aside> -->
             <el-container class="h-full">
-                <el-header v-show="route.meta.showHeader" class="p-0">
+                <el-header class="p-0"
+                    :style="{ height: route.meta.showHeader ? '60px' : '0px', overflow: 'hidden', padding: 0 }">
                     <Header />
                 </el-header>
                 <el-main class="h-full p-0">
                     <RouterView />
                     
                 </el-main>
-                <Tabbar v-show="route.meta.showTabbar && userManager != 'officeManager'" @chose-sheet="choseSheet" />
-                <ManagerTabbar v-show="route.meta.showTabbar && userManager == 'officeManager'" />
+                <el-footer v-if="route.meta.showTabbar" class="p-0" style="height: 56px; padding: 0;">
+                    <Tabbar v-show="route.meta.showTabbar && userManager != 'officeManager'" @chose-sheet="choseSheet" />
+                    <ManagerTabbar v-show="route.meta.showTabbar && userManager == 'officeManager'" />
+                </el-footer>
+
             </el-container>
         </el-container>
 

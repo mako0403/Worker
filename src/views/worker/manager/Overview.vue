@@ -21,18 +21,51 @@
                 </div>
             </div>
             <el-drawer v-model="menuDrawer" size="65%" :show-close="true" :with-header="false">
-                <div class="text-center border-round-lg" style="background-color: #fefefe;"><img :src="logoIcon" width="65%"></div>
-                <div class="mt-5 mx-2">                   
+                <div class="text-center border-round-lg" style="background-color: #fefefe;"><img :src="logoIcon"
+                        width="65%"></div>
+                <div class="mt-5 mx-2">
                     <div class="mb-5">
                         <div class="flex align-items-center">
-                            <el-icon size="21" class="text-dblue-300 mr-2"><VideoPlay /></el-icon>
-                            <RouterLink to="/worker/video/lists" class="text-dblue-500 text-md" @click="menuDrawer=false">视频资源库</RouterLink>
+                            <el-icon size="21" class="text-dblue-300 mr-2">
+                                <VideoPlay />
+                            </el-icon>
+                            <RouterLink to="/worker/video/lists" class="text-dblue-500 text-md"
+                                @click="menuDrawer = false">视频资源库</RouterLink>
                         </div>
                     </div>
-                    <el-divider class="my-3 border-gray-100"/>
+                    <div class="mb-5">
+                        <div class="flex align-items-center">
+                            <svg class="icon text-gray-600 mr-2" aria-hidden="true" style="width: 22px; height: 22px;">
+                                <use xlink:href="#icon-buru"></use>
+                            </svg>
+                            <RouterLink to="/worker/member/record/1" class="text-dblue-500 text-md"
+                                @click="menuDrawer = false">喂养记录</RouterLink>
+                        </div>
+                    </div>
+                    <div class="mb-5">
+                        <div class="flex align-items-center">
+                            <svg class="icon text-gray-600 mr-2" aria-hidden="true" style="width: 22px; height: 22px;">
+                                <use xlink:href="#icon-yuer"></use>
+                            </svg>
+                            <RouterLink to="/worker/member/record/2" class="text-dblue-500 text-md"
+                                @click="menuDrawer = false">育儿记录</RouterLink>
+                        </div>
+                    </div>
+                    <div class="mb-5">
+                        <div class="flex align-items-center">
+                            <svg class="icon text-gray-600 mr-2" aria-hidden="true" style="width: 22px; height: 22px;">
+                                <use xlink:href="#icon-rufanghuli"></use>
+                            </svg>
+                            <RouterLink to="/worker/member/record/3" class="text-dblue-500 text-md"
+                                @click="menuDrawer = false">乳房健康记录</RouterLink>
+                        </div>
+                    </div>
+                    <el-divider class="my-3 border-gray-100" />
                     <div class="mb-5">
                         <div class="flex align-items-center" @click="loginOut">
-                            <el-icon size="21" class="text-dblue-300 mr-2"><SwitchButton /></el-icon>
+                            <el-icon size="21" class="text-dblue-300 mr-2">
+                                <SwitchButton />
+                            </el-icon>
                             <div class="text-dblue-500 text-md">退出登录</div>
                         </div>
                     </div>
@@ -83,8 +116,7 @@
                                     <div class="text-lg">综合营业<br />组成</div>
                                     <div>
                                         <div class="bg-blue-50 border-circle p-1">
-                                            <svg class="icon" aria-hidden="true"
-                                                style="width: 30px; height: 30px;">
+                                            <svg class="icon" aria-hidden="true" style="width: 30px; height: 30px;">
                                                 <use xlink:href="#icon-yue1"></use>
                                             </svg>
                                         </div>
@@ -130,8 +162,7 @@
                                     <div class="text-lg">服务患者<br />组成</div>
                                     <div>
                                         <div class="bg-green-50 border-circle p-1">
-                                            <svg class="icon" aria-hidden="true"
-                                                style="width: 30px; height: 30px;">
+                                            <svg class="icon" aria-hidden="true" style="width: 30px; height: 30px;">
                                                 <use xlink:href="#icon-tuandui"></use>
                                             </svg>
                                         </div>
@@ -145,13 +176,13 @@
                                 <div class="flex justify-content-between mt-1">
                                     <div>
                                         <div class="text-xs">新客人数</div>
-                                        <div class="text-md mt-1">{{ analysisData.total_purchase_new_member_count }}<span
-                                                class="text-xs ml-1">人</span></div>
+                                        <div class="text-md mt-1">{{ analysisData.total_purchase_new_member_count
+                                            }}<span class="text-xs ml-1">人</span></div>
                                     </div>
                                     <div>
                                         <div class="text-xs">老客复购</div>
-                                        <div class="text-md mt-1">{{ analysisData.total_purchase_repeat_member_count }}<span
-                                                class="text-xs ml-1">人</span></div>
+                                        <div class="text-md mt-1">{{ analysisData.total_purchase_repeat_member_count
+                                            }}<span class="text-xs ml-1">人</span></div>
                                     </div>
                                 </div>
                             </div>
@@ -217,7 +248,8 @@
                                         </svg>
                                         营收总额
                                     </div>
-                                    <div class="text-md font-semibold text-red-600 ml-1">{{ item.sum_received || 0 }}</div>
+                                    <div class="text-md font-semibold text-red-600 ml-1">{{ item.sum_received || 0 }}
+                                    </div>
                                 </div>
                                 <div class="w-full mt-1">
                                     <div class="text-xs text-600 mb-1 align-items-center flex gap-1">
@@ -226,7 +258,8 @@
                                         </svg>
                                         新增销售总额
                                     </div>
-                                    <div class="text-md font-semibold text-blue-600 ml-1">{{ item.sum_sale_price }}</div>
+                                    <div class="text-md font-semibold text-blue-600 ml-1">{{ item.sum_sale_price }}
+                                    </div>
                                 </div>
                                 <div class="w-full mt-1">
                                     <div class="text-xs text-600 mb-1 align-items-center flex gap-1">
@@ -235,7 +268,8 @@
                                         </svg>
                                         赠送服务总额
                                     </div>
-                                    <div class="text-md font-semibold text-blue-600 ml-1">{{ item.sum_gift_price }}</div>
+                                    <div class="text-md font-semibold text-blue-600 ml-1">{{ item.sum_gift_price }}
+                                    </div>
                                 </div>
                                 <div class="w-full mt-1">
                                     <div class="text-xs text-600 mb-1 align-items-center flex gap-1">
@@ -244,7 +278,8 @@
                                         </svg>
                                         预约总量
                                     </div>
-                                    <div class="text-md font-semibold text-blue-600 ml-1">{{ item.sum_used_limits }}</div>
+                                    <div class="text-md font-semibold text-blue-600 ml-1">{{ item.sum_used_limits }}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -252,10 +287,12 @@
                             <div class="">
                                 <div class="text-sm text-100">本月新增销售组成</div>
                             </div>
-                            <div class="flex justify-content-between gap-3 text-right mt-2 bg-dblue-50 text-dblue-700 border-round-lg px-3 py-2">
+                            <div
+                                class="flex justify-content-between gap-3 text-right mt-2 bg-dblue-50 text-dblue-700 border-round-lg px-3 py-2">
                                 <div class="">
                                     <div class="text-xs mb-1">实收</div>
-                                    <div class="text-md"><span class="text-sm">￥</span>{{ item.sum_sale_received }}</div>
+                                    <div class="text-md"><span class="text-sm">￥</span>{{ item.sum_sale_received }}
+                                    </div>
                                 </div>
                                 <div class="">
                                     <div class="text-xs mb-1">未付</div>
@@ -327,7 +364,7 @@ import logoIcon from '@@/images/logo.png';
 import type { util_d$1 } from 'echarts/types/dist/shared';
 
 const showCurrentDate = ref(false);
-const currentDate = ref([moment().year(), moment().month()+1]);
+const currentDate = ref([moment().year(), moment().month() + 1]);
 const columnsType = ['year', 'month'];
 const minDate = new Date('2024', '05', '1');
 const maxDate = moment().add(1, 'month').add(1, 'day').toDate();
@@ -340,19 +377,19 @@ const setCurrentDate = async (value) => {
 
 const analysisData = ref({
     data: [],
-    total_performance_task:0,
-    total_sale_price:0,
-    total_received:0,
-    total_sale_received:0,
-    total_sale_non_received:0,
-    total_sale_debt:0,
-    total_still_debt:0,
-    total_gift_price:0,
-    total_all_purchase_member_count:0,
-    total_purchase_new_member_count:0,
-    total_purchase_repeat_member_count:0,
-    total_branch_member_count:0,
-    performance_completion_rate:0,
+    total_performance_task: 0,
+    total_sale_price: 0,
+    total_received: 0,
+    total_sale_received: 0,
+    total_sale_non_received: 0,
+    total_sale_debt: 0,
+    total_still_debt: 0,
+    total_gift_price: 0,
+    total_all_purchase_member_count: 0,
+    total_purchase_new_member_count: 0,
+    total_purchase_repeat_member_count: 0,
+    total_branch_member_count: 0,
+    performance_completion_rate: 0,
 });
 const performanceCompletionRate = ref({});
 const branchSumPie = ref([]);
@@ -363,28 +400,28 @@ const getAnalysisData = async () => {
     try {
         analysisData.value = {
             data: [],
-            total_performance_task:0,
-            total_sale_price:0,
-            total_received:0,
-            total_sale_received:0,
-            total_sale_non_received:0,
-            total_sale_debt:0,
-            total_still_debt:0,
-            total_gift_price:0,
-            total_all_purchase_member_count:0,
-            total_purchase_new_member_count:0,
-            total_purchase_repeat_member_count:0,
-            total_branch_member_count:0,
-            performance_completion_rate:0,
+            total_performance_task: 0,
+            total_sale_price: 0,
+            total_received: 0,
+            total_sale_received: 0,
+            total_sale_non_received: 0,
+            total_sale_debt: 0,
+            total_still_debt: 0,
+            total_gift_price: 0,
+            total_all_purchase_member_count: 0,
+            total_purchase_new_member_count: 0,
+            total_purchase_repeat_member_count: 0,
+            total_branch_member_count: 0,
+            performance_completion_rate: 0,
         };
 
         axiosLoading.addLoading();
-        const res = await axios.get('/company/branch_lists',{},{toast:0})
+        const res = await axios.get('/company/branch_lists', {type:1}, { toast: 0 })
         const branchLists = res.data;
         for (let i = 0; i < branchLists.length; i++) {
 
-            const { data } = await axios.get('/services/get_monthly_analysis', {bid:branchLists[i].id, year: currentDate.value[0], month: currentDate.value[1], mode: 'default' }, { toast: 0 });
-            if(data){
+            const { data } = await axios.get('/services/get_monthly_analysis', { bid: branchLists[i].id, year: currentDate.value[0], month: currentDate.value[1], mode: 'default' }, { toast: 0 });
+            if (data) {
                 analysisData.value.data.push(data);
                 analysisData.value.total_performance_task += Math.round(data.performance_task, 2)
                 analysisData.value.total_sale_price += Math.round(data.sum_sale_price, 2)
@@ -398,7 +435,7 @@ const getAnalysisData = async () => {
                 analysisData.value.total_purchase_new_member_count += Math.round(data.sum_purchase_new_member_count, 2)
                 analysisData.value.total_purchase_repeat_member_count += Math.round(data.sum_purchase_repeat_member_count, 2)
                 analysisData.value.total_branch_member_count += Math.round(data.sum_branch_member_count, 2)
-                analysisData.value.performance_completion_rate = Math.round(analysisData.value.total_sale_price / (analysisData.value.total_performance_task?analysisData.value.total_performance_task:10000) * 100, 2)
+                analysisData.value.performance_completion_rate = Math.round(analysisData.value.total_sale_price / (analysisData.value.total_performance_task ? analysisData.value.total_performance_task : 10000) * 100, 2)
             }
             await delay(500)
         }
@@ -413,7 +450,7 @@ const getAnalysisData = async () => {
         //     console.log(2222222222, analysisData.value)
         //     localStorage.setItem('performance_first_bid', data.data[0].branch_id);
         // }
-        
+
     } catch (error) {
         console.error(error);
     }
@@ -468,7 +505,7 @@ const updateChartOptions = () => {
                 },
                 data: [
                     {
-                        name: currentDate.value[0]+'年'+currentDate.value[1]+"月\n\n综合计划完成率",
+                        name: currentDate.value[0] + '年' + currentDate.value[1] + "月\n\n综合计划完成率",
                         value: analysisData.value.performance_completion_rate,
                         title: {
                             show: true,
@@ -592,7 +629,7 @@ const motivationalMessages = ref([
 const motivationalMessage = ref('')
 const getRandomMotivationalMessage = () => {
     // 根据完成率随机选择激励语句
-    if(analysisData.value.performance_completion_rate == 0){
+    if (analysisData.value.performance_completion_rate == 0) {
         motivationalMessage.value = 'A new beginning, let us achieve transcendence';
     }
     else if (analysisData.value.performance_completion_rate >= 100) {
@@ -611,7 +648,7 @@ const loginOut = async () => {
     localStorage.removeItem('ERPAuth');
     Cookies.remove('ERPAuth');
     useGlobalStore().updateLoginStatus(0)
-    router.replace({path:'/login'})
+    router.replace({ path: '/login' })
 }
 </script>
 <style scoped></style>

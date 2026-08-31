@@ -23,6 +23,7 @@ export const useGlobalStore = defineStore('global', () => {
 
     //const doubleCount = computed(() => count.value * 2)
     function updateLoginStatus(status: number) {
+        console.log('updateLoginStatus', status);
         if(status != 1){
             // 清除登录状态
             localStorage.removeItem('ERPAuth');
@@ -70,13 +71,30 @@ export const useGlobalStore = defineStore('global', () => {
         redirect.value = config;
     }
 
-    function setUserRole(role) {
+    function setUserRole(role: any) {
+        console.log('setUserRole', role);
         userRole.value = role;
     }
 
-    function setUserManager(role) {
-        userManager.value = role;
+    function setUserManager(role: any) {
+        // userManager.value = role;
+        userManager.value = Array.isArray(role) ? role : (role ? [role] : []);
     }
+
+    // 退出登录时重置状态
+    function logoutReset() {
+        isLogged.value = 0;
+        userRole.value = '';
+        userManager.value = '';
+        memberInfo.value = {};
+        workerConfig.value = {};
+        branchConfig.value = {};
+        // 如果有 redirect 或 replace 记录，建议也清理掉
+        redirect.value = '';
+        replace.value = '';
+        // ...重置其他必要配置
+    }
+
 
     return {
         tabbarName, 
@@ -90,6 +108,7 @@ export const useGlobalStore = defineStore('global', () => {
         redirect,
         userRole,
         userManager,
+        logoutReset,
         updateLoginStatus, 
         setGlobalConfig, 
         setBranchConfig, 

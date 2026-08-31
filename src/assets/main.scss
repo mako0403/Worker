@@ -59,3 +59,71 @@ img{
         }
     }
 }
+
+// /* ── Vant Dialog 全局美化 ─────────────────────────────────── */
+
+// :root {
+//     --van-dialog-border-radius:          24px;
+//     --van-dialog-header-padding-top:     0;
+//     --van-dialog-header-font-size:       17px;
+//     --van-dialog-header-font-weight:     700;
+//     --van-dialog-message-font-size:      14px;
+//     --van-dialog-message-line-height:    1.7;
+//     //--van-dialog-message-padding:        0 24px 24px;
+//     --van-dialog-button-height:          52px;
+//     --van-dialog-confirm-button-text-color: #7c5cbf;
+//     --van-dialog-cancel-button-text-color:  #999;
+// }
+
+// /* 顶部彩色装饰条 */
+// .van-dialog::before {
+//     content: '';
+//     display: block;
+//     height: 4px;
+//     background: linear-gradient(90deg, #7c5cbf, #e05c8a);
+//     border-radius: 24px 24px 0 0;
+// }
+
+// /* 标题区内边距 */
+// .van-dialog__header {
+//     padding: 28px 24px 8px !important;
+//     color: #1a1a2e;
+// }
+
+// /* 内容区 */
+// .van-dialog__message {
+//     color: #666;
+//     margin: 15px;
+// }
+
+// /* 按钮区分割线 */
+// .van-dialog__footer {
+//     border-top: 1px solid #f0e8ff !important;
+// }
+
+// /* 按钮统一高度和字重 */
+// .van-dialog__cancel,
+// .van-dialog__confirm {
+//     height: 52px !important;
+//     font-size: 15px !important;
+//     font-weight: 600 !important;
+// }
+
+// /* 取消按钮 */
+// .van-dialog__cancel {
+//     color: #bbb !important;
+// }
+
+// /* 确认按钮：紫粉渐变文字 */
+// .van-dialog__confirm {
+//     background: linear-gradient(135deg, #7c5cbf, #e05c8a) !important;
+//     -webkit-background-clip: text !important;
+//     -webkit-text-fill-color: transparent !important;
+// }
+
+// /* 危险操作：confirmButtonColor 传红色时覆盖 */
+// .van-dialog__confirm.van-button--danger {
+//     background: linear-gradient(135deg, #e05c8a, #ff6b6b) !important;
+//     -webkit-background-clip: text !important;
+//     -webkit-text-fill-color: transparent !important;
+// }

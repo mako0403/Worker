@@ -17,8 +17,8 @@
 import { ref, toRefs, onMounted, watch } from "vue";
 import Info from "@/views/worker/medical/appointment/Info.vue";
 import Lists from "@/views/worker/medical/appointment/Lists.vue";
-import { useGlobalStore } from '@/store/global'
-const { uploadsPath, workerConfig } = toRefs(useGlobalStore());
+import { useGlobal } from '@/utils/Global';
+const { axios, store, router, route, ElMessage, showLoading, hideLoading } = useGlobal();
 
 
 

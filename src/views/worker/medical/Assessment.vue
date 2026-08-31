@@ -41,7 +41,7 @@
                                                     </component>
 
                                                     <div v-if="item.type === 'upload_images'" class="flex flex-wrap gap-2">
-                                                        <div v-for="(url, imgIndex) in form.field[index][ii].value"
+                                                        <div v-show="workerConfig.is_manager != 0" v-for="(url, imgIndex) in form.field[index][ii].value"
                                                             :key="imgIndex" class="mb-2 relative"
                                                             style="width: 100px; height: 100px; position: relative; overflow: hidden; border-radius: 4px; background-color: #f0f0f0;">
 
@@ -78,7 +78,7 @@
         </el-container>
         <el-affix position="bottom" :offset="0" class="h-4rem w-full">
             <div class="flex px-4">
-                <el-button type="default" class="w-full bg-dblue-500 border-dblue-600 text-dblue-50" size="large"
+                <el-button v-if="!readOnly" type="default" class="w-full bg-dblue-500 border-dblue-600 text-dblue-50" size="large"
                     @click="submit">填写完成，保存表单</el-button>
             </div>
         </el-affix>
@@ -100,8 +100,6 @@ import { showImagePreview } from 'vant';
 import { Uploader as VanUploader, Image as VanImage, ImagePreview as VanImagePreview } from 'vant'
 import HeaderSimple from '@/components/layout/header/HeaderSimple.vue';
 import defaultAvatar from '@@/images/default_avatar.webp'
-
-
 
 const activeNames = ref(0)
 const handleChange = (val: string[]) => {
@@ -141,7 +139,9 @@ const submit = async () => {
     }
 }
 
+const readOnly = ref(false);
 onMounted(async () => {
+    readOnly.value = route.params.readonly ? true : false;
     const res = await axios.get('form/rules', { id: route.params.id })
     if (res.data) {
         form.value = res.data;
@@ -155,17 +155,34 @@ onMounted(async () => {
         if (formRes.data.field) {
             form.value.create_time = formRes.data.create_time;
             form.value.update_time = formRes.data.update_time;
-            Object.entries(form.value.field).forEach((item, index) => {
+
+            // 先填充数据
+            Object.entries(form.value.field).forEach((item) => {
                 const aaa = Object.entries(item[1]);
                 aaa.forEach((sub) => {
                     if (formRes.data.field[sub[0]]) {
-                        //console.log(234234234, item[1][sub[0]].type)
                         item[1][sub[0]].value = formRes.data.field[sub[0]]
                     }
                 })
             })
-            console.log(3424, form.value.field)
-            //form.value.field = formRes.data.field
+
+            // 再把图片字段的 URL 批量转成 base64
+            const convertTasks: Promise<void>[] = [];
+            Object.entries(form.value.field).forEach(([groupKey, group]) => {
+                Object.entries(group as any).forEach(([fieldKey, item]: any) => {
+                    if (item.type === 'upload_images' && Array.isArray(item.value) && item.value.length > 0) {
+                        const task = Promise.all(
+                            item.value.map((url: string) => urlToBase64(url))
+                        ).then(base64List => {
+                            form.value.field[groupKey][fieldKey].value = base64List;
+                        });
+                        convertTasks.push(task);
+                    }
+                });
+            });
+
+            // 等所有图片转换完成
+            await Promise.all(convertTasks);
         }
     }
 })
@@ -213,22 +230,22 @@ function getComponent(type) {
 function getComponentProps(item) {
     switch (item.type) {
         case 'number':
-            return { type: 'number', modelValue: item.value ? Number(item.value) : '', placeholder: item.placeholder };
+            return { type: 'number', modelValue: item.value ? Number(item.value) : '', placeholder: item.placeholder, disabled: readOnly.value };
         case 'step_number':
-            return { modelValue: Number(item.value) };
+            return { modelValue: Number(item.value), disabled: readOnly.value };
         case 'radio':
-            return { placeholder: item.placeholder, filterable: true };
+            return { placeholder: item.placeholder, filterable: true, disabled: readOnly.value };
         case 'checkbox':
             const value = typeof item.value === 'string' && item.value.includes(',') ? item.value.split(',').map(value => value.trim()).filter(value => value) : item.value || '';
-            return { multiple: true, placeholder: item.placeholder, filterable: true, modelValue: value };
+            return { multiple: true, placeholder: item.placeholder, filterable: true, modelValue: value, disabled: readOnly.value };
         case 'date':
-            return { type: 'date', valueFormat: 'YYYY-MM-DD', placeholder: item.placeholder };
+            return { type: 'date', valueFormat: 'YYYY-MM-DD', placeholder: item.placeholder, disabled: readOnly.value };
         case 'textarea':
-            return { type: 'textarea', rows: 4, placeholder: item.placeholder };
+            return { type: 'textarea', rows: 4, placeholder: item.placeholder, disabled: readOnly.value };
         case 'upload_images':
-            return { action: '/upload', multiple: true, listType: 'picture-card' };
+            return { action: '/upload', multiple: true, listType: 'picture-card', disabled: readOnly.value };
         default:
-            return { placeholder: item.placeholder };
+            return { placeholder: item.placeholder, disabled: readOnly.value };
     }
 }
 
@@ -266,8 +283,8 @@ function handleImage(file) {
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
 
-                const maxWidth = 1024;
-                const maxHeight = 1024;
+                const maxWidth = 2048;
+                const maxHeight = 2048;
                 let width = img.width;
                 let height = img.height;
 
@@ -296,7 +313,11 @@ function handleImage(file) {
     });
 }
 
-
+// 新增：URL 转 base64 工具函数
+async function urlToBase64(url: string): Promise<string> {
+    const res = await axios.get('/index/image_to_base64', { url }, { toast: 0 });
+    return res.data;
+}
 
 </script>
 <style>

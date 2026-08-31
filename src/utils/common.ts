@@ -2,6 +2,45 @@ import moment from "moment"
 import { ElLoading } from 'element-plus';
 
 /**
+ * Return a string that represents the time difference between the input time
+ * and the current time using natural language.
+ *
+ * Examples:
+ * - '刚刚' if the time difference is less than 1 minute
+ * - '10 分钟前' if the time difference is less than 1 hour
+ * - '3 小时前' if the time difference is less than 24 hours
+ * - '2 天前' if the time difference is less than 30 days
+ * - '3 个月前' if the time difference is less than 12 months
+ * - '2 年前' if the time difference is more than 12 months
+ *
+ * @param {string | Date | number} inputTime - The timestamp or Date object to
+ *   compare with the current time.
+ * @return {string} A string that represents the time difference using natural
+ *   language.
+ */
+
+export function useTimeAgo(inputTime: string | Date | number): string {
+  const now = moment()
+  const past = moment(inputTime)
+
+  const minutes = now.diff(past, 'minutes')
+  if (minutes < 1) return '刚刚'
+  if (minutes < 60) return `${minutes} 分钟前`
+
+  const hours = now.diff(past, 'hours')
+  if (hours < 24) return `${hours} 小时前`
+
+  const days = now.diff(past, 'days')
+  if (days < 30) return `${days} 天前`
+
+  const months = now.diff(past, 'months')
+  if (months < 12) return `${months} 个月前`
+
+  const years = now.diff(past, 'years')
+  return `${years} 年前`
+}
+
+/**
  * Returns the current date in the specified format.
  *
  * @param date - The date to format. Default is the current date.

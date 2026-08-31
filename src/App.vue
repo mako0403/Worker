@@ -29,9 +29,8 @@ const router = useRouter();
 // 注入 main.js 中提供的全局 isFocused 变量
 const isFocused = inject('isFocused');
 
-onMounted(()=>{
+onMounted(() => {
     //console.log(23424234234, route.query)
 })
-
 
 </script>

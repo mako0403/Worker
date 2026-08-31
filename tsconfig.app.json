@@ -9,10 +9,11 @@
         "src/**/__tests__/*"
     ],
     "compilerOptions": {
+        "ignoreDeprecations": "5.0",
         "isolatedModules": false,
         "composite": true,
         "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-        "baseUrl": "./",
+        //"baseUrl": "./",
         "paths": {
             "@/*": [
                 "./src/*"

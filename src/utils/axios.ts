@@ -5,7 +5,7 @@ import { AxiosLoading } from "@/utils/common"
 import { AxiosCancel } from "@/utils/calcel"
 import { useGlobalStore } from "@/store/global";
 import { ElMessage, ElNotification } from 'element-plus'
-
+import router from "@/router";
 
 
 const axiosLoading = new AxiosLoading()
@@ -81,7 +81,15 @@ service.interceptors.response.use((response: AxiosResponse) => {
         console.log('响应拦截：', data);
     }
 
+    // 假设后端返回 0 表示业务失败，但通过 data.session.isLogged 判断登录
+    if (data.session && data.session.isLogged === 0) {
+        // 发现登录失效，直接触发注销
+        logout(); 
+        return Promise.reject('Session Expired');
+    }
+
     globalStore.updateLoginStatus(data.session.isLogged || 0)
+    globalStore.setUserRole(data.session.userType || '')
     globalStore.setGlobalConfig(data.session.globalConfig || {})
     globalStore.setBranchConfig(data.session.branchConfig || {})
     globalStore.setWorkerConfig(data.session.workerConfig || {})
@@ -93,7 +101,6 @@ service.interceptors.response.use((response: AxiosResponse) => {
         //return Promise.reject('Login expired');
     }
 
-    
     // 全局错误信息拦截（防止下载文件得时候返回数据流，没有code，直接报错）
     if (data.status != RequestEnums.SUCCESS) {
         ElMessage.error(`${data.info}`);
@@ -200,4 +207,35 @@ function addAjaxErrorLog(error: AxiosError): void {
     console.log('Params:', ["get", "delete"].includes(error.config?.method || '') ? JSON.stringify(error.config?.params) : JSON.stringify(error.config?.data));
     console.log('Detail:', error.toJSON());
     console.groupEnd();
+}
+
+
+/**
+ * 统一退出登录逻辑
+ * 放在 axios 文件中方便拦截器直接调用
+ */
+export async function logout() {
+    const globalStore = useGlobalStore();
+
+    try { 
+        // 1. 发送注销请求（趁着 ERPAuth 还没删）
+        // 使用 service 实例而不是封装好的 request，避免循环逻辑
+        await service.post('/index/logout');
+    } catch (error) {
+        console.error("服务端 Session 销毁失败或已失效", error);
+    } finally {
+        // 2. 物理清理：LocalStorage 和 Cookies
+        localStorage.removeItem('ERPAuth');
+        Cookies.remove('ERPAuth');
+        Cookies.remove('PHPSESSID', { path: '/' });
+
+        // 3. 状态清理：调用 Pinia 的重置方法
+        globalStore.logoutReset();
+
+        // 4. 跳转：直接回到登录页
+        // 如果当前不在登录页，则执行跳转并刷新页面（确保内存彻底干净）
+        if (router.currentRoute.value.path !== '/login') {
+            router.replace('/login');
+        }
+    }
 }
